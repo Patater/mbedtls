@@ -109,6 +109,8 @@
 #define MBEDTLS_ERR_SSL_UNEXPECTED_RECORD                 -0x6700  /**< Record header looks valid but is not expected. */
 #define MBEDTLS_ERR_SSL_NON_FATAL                         -0x6680  /**< The alert message received indicates a non-fatal error. */
 #define MBEDTLS_ERR_SSL_INVALID_VERIFY_HASH               -0x6600  /**< Couldn't set the hash for verifying CertificateVerify */
+#define MBEDTLS_ERR_SSL_BAD_CONFIG                        -0x6580  /**< Invalid value in SSL config */
+
 
 /*
  * Various constants
@@ -123,6 +125,10 @@
 #define MBEDTLS_SSL_TRANSPORT_DATAGRAM          1   /*!< DTLS     */
 
 #define MBEDTLS_SSL_MAX_HOST_NAME_LEN           255 /*!< Maximum host name defined in RFC 1035 */
+
+#define MBEDTLS_SSL_MAX_SIG_HASH_ALGORITHMS     65534 /*!< Maximum size of list in sig-hash algorithm ext., in RFC 5246    */
+#define MBEDTLS_SSL_MAX_SUPPORTED_ECC           65534 /*!< Maximum size of list in supported elliptic curve ext., RFC 4492 */
+#define MBEDTLS_SSL_MAX_ALPN                    65534 /*!< Maximum size of list in alpn ext., RFC 7301                     */
 
 /* RFC 6066 section 4, see also mfl_code_to_length in ssl_tls.c
  * NONE must be zero so that memset()ing structure to zero works */
@@ -381,6 +387,28 @@ union mbedtls_ssl_premaster_secret
 };
 
 #define MBEDTLS_PREMASTER_SIZE     sizeof( union mbedtls_ssl_premaster_secret )
+
+static inline int mbedtls_ssl_chk_buf( uint8_t *cur, const uint8_t *end, size_t need )
+{
+    return( end < cur || (size_t)( end - cur ) < (size_t) need );
+}
+
+#define MBEDTLS_SSL_CHK_BUF_PTR( cur, end, need )			\
+    do {								\
+        if( mbedtls_ssl_chk_buf( ( cur ), ( end ), ( need ) ) != 0 )	\
+        {								\
+            return( MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL );			\
+        }								\
+    } while( 0 )
+
+#define MBEDTLS_SSL_CHK_BUF_SZ( avail, need )			\
+    do {							\
+        if( ( avail ) < ( need ) )				\
+        {							\
+            return( MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL );		\
+        }							\
+    } while( 0 )
+	    
 
 #ifdef __cplusplus
 extern "C" {
