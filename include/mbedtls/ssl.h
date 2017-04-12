@@ -111,7 +111,6 @@
 #define MBEDTLS_ERR_SSL_INVALID_VERIFY_HASH               -0x6600  /**< Couldn't set the hash for verifying CertificateVerify */
 #define MBEDTLS_ERR_SSL_BAD_CONFIG                        -0x6580  /**< Invalid value in SSL config */
 
-
 /*
  * Various constants
  */
@@ -390,7 +389,7 @@ union mbedtls_ssl_premaster_secret
 
 static inline int mbedtls_ssl_chk_buf( uint8_t *cur, const uint8_t *end, size_t need )
 {
-    return( end < cur || (size_t)( end - cur ) < (size_t) need );
+    return( end < cur || (size_t)( end - cur ) < (size_t)need );
 }
 
 #define MBEDTLS_SSL_CHK_BUF_PTR( cur, end, need )			\
@@ -401,14 +400,14 @@ static inline int mbedtls_ssl_chk_buf( uint8_t *cur, const uint8_t *end, size_t 
         }								\
     } while( 0 )
 
-#define MBEDTLS_SSL_CHK_BUF_SZ( avail, need )			\
-    do {							\
-        if( ( avail ) < ( need ) )				\
-        {							\
-            return( MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL );		\
-        }							\
+#define MBEDTLS_SSL_CHK_BUF_SZ( avail, need )                   \
+    do {                                                        \
+        if( ( avail ) < ( need ) )                              \
+        {                                                       \
+            return( MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL );         \
+        }                                                       \
     } while( 0 )
-	    
+
 
 #ifdef __cplusplus
 extern "C" {

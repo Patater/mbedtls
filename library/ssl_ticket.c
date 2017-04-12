@@ -306,8 +306,7 @@ int mbedtls_ssl_ticket_write( void *p_ticket,
 
     /* We need at least 4 bytes for key_name, 12 for IV, 2 for len 16 for tag,
      * in addition to session itself, that will be checked when writing it. */
-    if( end - start < 4 + 12 + 2 + 16 )
-        return( MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL );
+    MBEDTLS_SSL_CHK_BUF_PTR( start, end, 4 + 12 + 2 + 16 );
 
 #if defined(MBEDTLS_THREADING_C)
     if( ( ret = mbedtls_mutex_lock( &ctx->mutex ) ) != 0 )
@@ -327,8 +326,8 @@ int mbedtls_ssl_ticket_write( void *p_ticket,
         goto cleanup;
 
     /* Dump session state */
-    if( ( ret = ssl_save_session( session,
-                                  state, end - state, &clear_len ) ) != 0 ||
+    if( ( ret = ssl_save_session( session, state,
+                                  end - state, &clear_len ) ) != 0 ||
         (unsigned long) clear_len > 65535 )
     {
          goto cleanup;
@@ -339,8 +338,9 @@ int mbedtls_ssl_ticket_write( void *p_ticket,
     /* Encrypt and authenticate */
     tag = state + clear_len;
     if( ( ret = mbedtls_cipher_auth_encrypt( &key->ctx,
-                    iv, 12, key_name, 4 + 12 + 2,
-                    state, clear_len, state, &ciph_len, tag, 16 ) ) != 0 )
+                      iv, 12, key_name, 4 + 12 + 2,
+                      state, clear_len, state,
+                      &ciph_len, tag, 16 ) ) != 0 )
     {
         goto cleanup;
     }
