@@ -387,7 +387,9 @@ union mbedtls_ssl_premaster_secret
 
 #define MBEDTLS_PREMASTER_SIZE     sizeof( union mbedtls_ssl_premaster_secret )
 
-static inline int mbedtls_ssl_chk_buf( uint8_t *cur, const uint8_t *end, size_t need )
+static inline int mbedtls_ssl_chk_buf( uint8_t *cur,
+                                       const uint8_t *end,
+                                       size_t need )
 {
     return( end < cur || (size_t)( end - cur ) < (size_t)need );
 }
