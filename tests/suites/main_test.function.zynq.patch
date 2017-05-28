@@ -1,0 +1,175 @@
+--- mbedtls/tests/suites/main_test.function	2017-05-25 08:27:26.178209000 +0300
++++ mbedtls/tests/suites/main_test.function.patched	2017-05-25 08:27:18.726348000 +0300
+@@ -1,4 +1,14 @@
+ #line 1 "main_test.function"
++#include <pthread.h>
++//#include <platform.h>
++#include "cc_lib.h"
++#include "tests_phys_map.h"
++#include "tests_hw_access_iot.h"
++
++extern unsigned long  g_testHwUserStackBaseAddr;
++static CCRndContext_t	 *rndContext_ptr;
++static CCRndWorkBuff_t  *rndWorkBuff_ptr;
++
+ SUITE_PRE_DEP
+ #define TEST_SUITE_ACTIVE
+ 
+@@ -132,7 +142,7 @@
+     "   Options:\n" \
+     "     -v | --verbose    Display full information about each test\n" \
+     "     -h | --help       Display this information\n\n", \
+-    argv[0], \
++    par->argv[0], \
+     "TESTCASE_FILENAME"
+ 
+ 
+@@ -243,9 +253,36 @@
+             test_snprintf( 5, "123",         3 ) != 0 );
+ }
+ 
+-int main(int argc, const char *argv[])
++
++void platform_start(void){
++	initPlatform();
++
++	rndContext_ptr = (CCRndContext_t *)g_testHwRndCtxBaseAddr;
++	rndWorkBuff_ptr = (CCRndWorkBuff_t *)(g_testHwRndWorkBuffBaseAddr);
++
++	CC_LibInit(rndContext_ptr, rndWorkBuff_ptr);
++}
++
++void platform_stop(void){
++	CC_LibFini(rndContext_ptr);
++	freePlatform();
++}
++
++typedef struct{
++	int argc;
++	const char **argv;
++}params;
++
++// global variables to be returned from run_thread
++int is_error;
++static int run_thread_ok = 0;
++static int run_thread_error = 1;
++
++
++void *run_thread(void *param)
+ {
+     /* Local Configurations and options */
++    params *par = (params*) param;
+     const char *default_filename = "TESTCASE_FILENAME";
+     const char *test_filename = NULL;
+     const char **test_files = NULL;
+@@ -280,7 +317,7 @@
+     if( pointer != NULL )
+     {
+         mbedtls_fprintf( stderr, "all-bits-zero is not a NULL pointer\n" );
+-        return( 1 );
++        return( &run_thread_error );
+     }
+ 
+     /*
+@@ -289,12 +326,12 @@
+     if( run_test_snprintf() != 0 )
+     {
+         mbedtls_fprintf( stderr, "the snprintf implementation is broken\n" );
+-        return( 0 );
++        return( &run_thread_ok );
+     }
+ 
+-    while( arg_index < argc)
++    while( arg_index < par->argc)
+     {
+-        next_arg = argv[ arg_index ];
++        next_arg = par->argv[ arg_index ];
+ 
+         if( strcmp(next_arg, "--verbose" ) == 0 ||
+                  strcmp(next_arg, "-v" ) == 0 )
+@@ -312,8 +349,8 @@
+             /* Not an option, therefore treat all further arguments as the file
+              * list.
+              */
+-            test_files = &argv[ arg_index ];
+-            testfile_count = argc - arg_index;
++            test_files = &(par->argv[ arg_index ]);
++            testfile_count = par->argc - arg_index;
+         }
+ 
+         arg_index++;
+@@ -341,7 +378,7 @@
+         {
+             mbedtls_fprintf( stderr, "Failed to open test file: %s\n",
+                              test_filename );
+-            return( 1 );
++            return( &run_thread_error );
+         }
+ 
+         while( !feof( file ) )
+@@ -474,7 +511,7 @@
+             {
+                 mbedtls_fprintf( stderr, "Should be empty %d\n",
+                                  (int) strlen(buf) );
+-                return( 1 );
++                return( &run_thread_error );
+             }
+         }
+         fclose(file);
+@@ -506,6 +543,55 @@
+         close_output( stdout );
+ #endif /* __unix__ || __APPLE__ __MACH__ */
+ 
+-    return( total_errors != 0 );
++    is_error = (total_errors != 0);
++    pthread_exit(&is_error);
++    return( &is_error );
++}
++
++
++int main( int argc, const char *argv[] )
++{
++    int threadRc;
++    pthread_t threadId;
++    pthread_attr_t threadAttr;
++    int ret;
++    void *threadRet;
++    params par;
++
++    par.argc = argc;
++    par.argv = argv;
++
++    platform_start();
++
++    
++    threadRc = pthread_attr_init(&threadAttr);
++    if (threadRc != 0) {
++        mbedtls_fprintf(stderr, "pthread_attr_init failed\n");
++        return -1;
++    }
++
++    threadRc = pthread_attr_setstack(&threadAttr, (void *)g_testHwUserStackBaseAddr, 1024*1024*4);
++    if (threadRc != 0) {
++        mbedtls_fprintf(stderr, "pthread_attr_setstack failed\n");
++        return -1;
++    }
++
++    /* Create independent thread which run with  */
++    threadRc = pthread_create(&threadId, &threadAttr, (void *)run_thread, &par);
++    if (threadRc != 0) {
++        mbedtls_fprintf(stderr, "pthread_create failed\n");
++        return -1;
++    }
++    
++    /* Wait till thread is complete before main continues */
++    threadRc = pthread_join( threadId, &threadRet);
++    if (threadRc != 0) {
++        mbedtls_fprintf(stderr, "pthread_join failed\n");
++        return -1;
++    }
++    ret = *((int *)*&threadRet);;
++    platform_stop();
++
++    return( ret );
+ }
+ 
