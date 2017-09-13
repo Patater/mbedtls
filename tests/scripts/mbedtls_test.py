@@ -73,8 +73,9 @@ class TestDataParser(object):
                 out.append(part)
                 part = ''
             else:
-                part += str[i]
                 escape = not escape and str[i] == '\\'
+                # Skip escape character
+                if not escape: part += str[i]
         if len(part):
             out.append(part)
         return out
