@@ -68,8 +68,8 @@ static int ssl_write_hostname_ext( mbedtls_ssl_context *ssl,
     if( ssl->hostname == NULL )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding server name "
-                                "extension: %s", ssl->hostname ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding server name extension: %s",
+                                ssl->hostname ) );
 
     hostname_len = strlen( ssl->hostname );
 
@@ -127,8 +127,7 @@ static int ssl_write_renegotiation_ext( mbedtls_ssl_context *ssl,
     if( ssl->renego_status != MBEDTLS_SSL_RENEGOTIATION_IN_PROGRESS )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding "
-                                "renegotiation extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding renegotiation extension" ) );
 
     MBEDTLS_SSL_CHK_BUF_PTR( p, end, 5 + ssl->verify_data_len );
 
@@ -175,8 +174,7 @@ static int ssl_write_signature_algorithms_ext( mbedtls_ssl_context *ssl,
     if( ssl->conf->max_minor_ver != MBEDTLS_SSL_MINOR_VERSION_3 )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding "
-                                "signature_algorithms extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding signature_algorithms extension" ) );
 
     if( ssl->conf->sig_hashes == NULL )
         return( MBEDTLS_ERR_SSL_BAD_CONFIG );
@@ -270,8 +268,7 @@ static int ssl_write_supported_elliptic_curves_ext( mbedtls_ssl_context *ssl,
 
     *olen = 0;
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding "
-                                "supported_elliptic_curves extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding supported_elliptic_curves extension" ) );
 
 #if defined(MBEDTLS_ECP_C)
     if( ssl->conf->curve_list == NULL )
@@ -290,8 +287,7 @@ static int ssl_write_supported_elliptic_curves_ext( mbedtls_ssl_context *ssl,
 #endif /* MBEDTLS_ECP_C */
         if( info == NULL )
         {
-            MBEDTLS_SSL_DEBUG_MSG( 1, ( "invalid curve in"
-                                        " ssl configuration" ) );
+            MBEDTLS_SSL_DEBUG_MSG( 1, ( "invalid curve in ssl configuration" ) );
             return( MBEDTLS_ERR_SSL_BAD_CONFIG );
         }
 
@@ -299,8 +295,7 @@ static int ssl_write_supported_elliptic_curves_ext( mbedtls_ssl_context *ssl,
 
         if( elliptic_curve_len > MBEDTLS_SSL_MAX_SUPPORTED_ECC )
         {
-            MBEDTLS_SSL_DEBUG_MSG( 3, ( "malformed supported_elliptic_"
-                                        "curves extension in config" ) );
+            MBEDTLS_SSL_DEBUG_MSG( 3, ( "malformed supported_elliptic_curves extension in config" ) );
             return( MBEDTLS_ERR_SSL_BAD_CONFIG );
         }
     }
@@ -354,8 +349,7 @@ static int ssl_write_supported_point_formats_ext( mbedtls_ssl_context *ssl,
 
     *olen = 0;
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding "
-                                "supported_point_formats extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding supported_point_formats extension" ) );
     MBEDTLS_SSL_CHK_BUF_PTR( p, end, 6 );
 
     *p++ = (unsigned char)( ( MBEDTLS_TLS_EXT_SUPPORTED_POINT_FORMATS >> 8 )
@@ -392,8 +386,7 @@ static int ssl_write_ecjpake_kkpp_ext( mbedtls_ssl_context *ssl,
     if( mbedtls_ecjpake_check( &ssl->handshake->ecjpake_ctx ) != 0 )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding ecjpake_kkpp"
-                                " extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding ecjpake_kkpp extension" ) );
 
     MBEDTLS_SSL_CHK_BUF_PTR( p, end, 4 );
 
@@ -462,8 +455,7 @@ static int ssl_write_max_fragment_length_ext( mbedtls_ssl_context *ssl,
     if( ssl->conf->mfl_code == MBEDTLS_SSL_MAX_FRAG_LEN_NONE )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding "
-                                "max_fragment_length extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding max_fragment_length extension" ) );
 
     MBEDTLS_SSL_CHK_BUF_PTR( p, end, 5 );
 
@@ -496,8 +488,7 @@ static int ssl_write_truncated_hmac_ext( mbedtls_ssl_context *ssl,
     if( ssl->conf->trunc_hmac == MBEDTLS_SSL_TRUNC_HMAC_DISABLED )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding "
-                                "truncated_hmac extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding truncated_hmac extension" ) );
 
     MBEDTLS_SSL_CHK_BUF_PTR( p, end, 4 );
 
@@ -527,8 +518,7 @@ static int ssl_write_encrypt_then_mac_ext( mbedtls_ssl_context *ssl,
         ssl->conf->max_minor_ver == MBEDTLS_SSL_MINOR_VERSION_0 )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding encrypt_then_mac "
-                                "extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding encrypt_then_mac extension" ) );
 
     MBEDTLS_SSL_CHK_BUF_PTR( p, end, 4 );
 
@@ -558,8 +548,7 @@ static int ssl_write_extended_ms_ext( mbedtls_ssl_context *ssl,
         ssl->conf->max_minor_ver == MBEDTLS_SSL_MINOR_VERSION_0 )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding extended_master_secret "
-                                "extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding extended_master_secret extension" ) );
 
     MBEDTLS_SSL_CHK_BUF_PTR( p, end, 4 );
 
@@ -591,8 +580,7 @@ static int ssl_write_session_ticket_ext( mbedtls_ssl_context *ssl,
     if( ssl->conf->session_tickets == MBEDTLS_SSL_SESSION_TICKETS_DISABLED )
         return( 0 );
 
-    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding session "
-                                "ticket extension" ) );
+    MBEDTLS_SSL_DEBUG_MSG( 3, ( "client hello, adding session ticket extension" ) );
 
     /* The addition is safe here since the ticket length is 16 bit. */
     MBEDTLS_SSL_CHK_BUF_PTR( p, end, 4 + tlen );
@@ -758,9 +746,7 @@ static int ssl_write_client_hello( mbedtls_ssl_context *ssl )
 
     if( ssl->conf->max_major_ver == 0 )
     {
-        MBEDTLS_SSL_DEBUG_MSG( 1, ( "configured max major version "
-                                    "is invalid, consider using "
-                                    "mbedtls_ssl_config_defaults()" ) );
+        MBEDTLS_SSL_DEBUG_MSG( 1, ( "configured max major version is invalid, consider using mbedtls_ssl_config_defaults()" ) );
         return( MBEDTLS_ERR_SSL_BAD_CONFIG );
     }
 
