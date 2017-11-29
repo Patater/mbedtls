@@ -75,17 +75,6 @@
 
 #endif /* MBEDTLS_DEBUG_C */
 
-#define MBEDTLS_SSL_CHK_BUF_PTR_WITH_DEBUG( cur, end, need )            \
-    do {                                                                \
-        if( mbedtls_ssl_chk_buf( ( cur ), ( end ), ( need ) ) != 0 )    \
-        {                                                               \
-            MBEDTLS_SSL_DEBUG_MSG( 1, ( "buffer too small: cur %p, "    \
-                                        "end %p, want %u)",             \
-                                        cur, end, need ) );             \
-            return( MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL );                 \
-        }                                                               \
-    } while( 0 )
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -236,4 +225,3 @@ void mbedtls_debug_print_crt( const mbedtls_ssl_context *ssl, int level,
 #endif
 
 #endif /* debug.h */
-
