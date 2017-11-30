@@ -249,16 +249,16 @@ exit:
     /*
     * tidy up the stack
     */
-    mbedtls_zeroize(buf,MBEDTLS_CTR_DRBG_MAX_SEED_INPUT + MBEDTLS_CTR_DRBG_BLOCKSIZE + 16);
-    mbedtls_zeroize(tmp,MBEDTLS_CTR_DRBG_SEEDLEN);
-    mbedtls_zeroize(key,MBEDTLS_CTR_DRBG_KEYSIZE);
-    mbedtls_zeroize(chain,MBEDTLS_CTR_DRBG_BLOCKSIZE);
+    mbedtls_zeroize( buf, MBEDTLS_CTR_DRBG_MAX_SEED_INPUT + MBEDTLS_CTR_DRBG_BLOCKSIZE + 16 );
+    mbedtls_zeroize( tmp, MBEDTLS_CTR_DRBG_SEEDLEN );
+    mbedtls_zeroize( key, MBEDTLS_CTR_DRBG_KEYSIZE );
+    mbedtls_zeroize( chain, MBEDTLS_CTR_DRBG_BLOCKSIZE );
     if ( 0 != ret )
     {
         /*
         * wipe partial seed from memory
         */
-        mbedtls_zeroize(output, MBEDTLS_CTR_DRBG_SEEDLEN);
+        mbedtls_zeroize( output, MBEDTLS_CTR_DRBG_SEEDLEN );
     }
 
     return( ret );
