@@ -587,6 +587,8 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
 #if defined(MBEDTLS_CTR_DRBG_C)
     if( use_ret == -(MBEDTLS_ERR_CTR_DRBG_ENTROPY_SOURCE_FAILED) )
         mbedtls_snprintf( buf, buflen, "CTR_DRBG - The entropy source failed" );
+    if( use_ret == -(MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED) )
+        mbedtls_snprintf( buf, buflen, "CTR_DRBG - Some of the crypto API (AES) has failed" );
     if( use_ret == -(MBEDTLS_ERR_CTR_DRBG_REQUEST_TOO_BIG) )
         mbedtls_snprintf( buf, buflen, "CTR_DRBG - Too many random requested in single call" );
     if( use_ret == -(MBEDTLS_ERR_CTR_DRBG_INPUT_TOO_BIG) )
