@@ -94,7 +94,7 @@ int mbedtls_ctr_drbg_seed_entropy_len(
     /*
      * Initialize with an empty key
      */
-    if ( mbedtls_aes_setkey_enc( &ctx->aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) != 0 )
+    if( mbedtls_aes_setkey_enc( &ctx->aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) != 0 )
     {
         return ( MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED );
     }
@@ -185,7 +185,7 @@ static int block_cipher_df( unsigned char *output,
     for( i = 0; i < MBEDTLS_CTR_DRBG_KEYSIZE; i++ )
         key[i] = i;
 
-    if ( 0 != mbedtls_aes_setkey_enc( &aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) )
+    if( mbedtls_aes_setkey_enc( &aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) != 0 )
     {
         ret = MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
         goto exit;
@@ -230,7 +230,7 @@ static int block_cipher_df( unsigned char *output,
     {
         ret = MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
         goto exit;
-    }    
+    }
     iv = tmp + MBEDTLS_CTR_DRBG_KEYSIZE;
     p = output;
 
@@ -249,10 +249,10 @@ exit:
     /*
     * tidy up the stack
     */
-    mbedtls_zeroize( buf, MBEDTLS_CTR_DRBG_MAX_SEED_INPUT + MBEDTLS_CTR_DRBG_BLOCKSIZE + 16 );
-    mbedtls_zeroize( tmp, MBEDTLS_CTR_DRBG_SEEDLEN );
-    mbedtls_zeroize( key, MBEDTLS_CTR_DRBG_KEYSIZE );
-    mbedtls_zeroize( chain, MBEDTLS_CTR_DRBG_BLOCKSIZE );
+    mbedtls_zeroize( buf, sizeof( buf ) );
+    mbedtls_zeroize( tmp, sizeof( tmp ) );
+    mbedtls_zeroize( key, sizeof( key ) );
+    mbedtls_zeroize( chain, sizeof( chain ) );
     if ( 0 != ret )
     {
         /*
@@ -288,7 +288,7 @@ static int ctr_drbg_update_internal( mbedtls_ctr_drbg_context *ctx,
         if ( 0 != mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, p ) )
         {
             return ( MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED );
-        }            
+        }
 
         p += MBEDTLS_CTR_DRBG_BLOCKSIZE;
     }
@@ -410,7 +410,7 @@ int mbedtls_ctr_drbg_random_with_add( void *p_rng,
 
     if( add_len > 0 )
     {
-        if ( ( ret = block_cipher_df( add_input, additional, add_len ) ) != 0 )            
+        if ( ( ret = block_cipher_df( add_input, additional, add_len ) ) != 0 )
         {
             return ret;
         }
@@ -450,7 +450,7 @@ int mbedtls_ctr_drbg_random_with_add( void *p_rng,
     if ( ctr_drbg_update_internal( ctx, add_input ) != 0 )
     {
         return MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
-    }        
+    }
 
     ctx->reseed_counter++;
 
