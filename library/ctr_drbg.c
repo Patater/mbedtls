@@ -94,9 +94,9 @@ int mbedtls_ctr_drbg_seed_entropy_len(
     /*
      * Initialize with an empty key
      */
-    if( mbedtls_aes_setkey_enc( &ctx->aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) != 0 )
+    if( ( ret = mbedtls_aes_setkey_enc( &ctx->aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
     {
-        return ( MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED );
+        return ( ret );
     }
 
     if( ( ret = mbedtls_ctr_drbg_reseed( ctx, custom, len ) ) != 0 )
@@ -185,9 +185,8 @@ static int block_cipher_df( unsigned char *output,
     for( i = 0; i < MBEDTLS_CTR_DRBG_KEYSIZE; i++ )
         key[i] = i;
 
-    if( mbedtls_aes_setkey_enc( &aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) != 0 )
+    if( ( ret = mbedtls_aes_setkey_enc( &aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
     {
-        ret = MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
         goto exit;
     }
 
@@ -208,9 +207,8 @@ static int block_cipher_df( unsigned char *output,
             use_len -= ( use_len >= MBEDTLS_CTR_DRBG_BLOCKSIZE ) ?
                        MBEDTLS_CTR_DRBG_BLOCKSIZE : use_len;
 
-            if ( 0 != mbedtls_aes_crypt_ecb( &aes_ctx, MBEDTLS_AES_ENCRYPT, chain, chain ) )
+            if ( ( ret = mbedtls_aes_crypt_ecb( &aes_ctx, MBEDTLS_AES_ENCRYPT, chain, chain ) ) != 0 )
             {
-                ret = MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
                 goto exit;
             }
         }
@@ -226,9 +224,8 @@ static int block_cipher_df( unsigned char *output,
     /*
      * Do final encryption with reduced data
      */
-    if ( 0 != mbedtls_aes_setkey_enc( &aes_ctx, tmp, MBEDTLS_CTR_DRBG_KEYBITS ) )
+    if( ( ret = mbedtls_aes_setkey_enc( &aes_ctx, tmp, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
     {
-        ret = MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
         goto exit;
     }
     iv = tmp + MBEDTLS_CTR_DRBG_KEYSIZE;
@@ -236,9 +233,8 @@ static int block_cipher_df( unsigned char *output,
 
     for( j = 0; j < MBEDTLS_CTR_DRBG_SEEDLEN; j += MBEDTLS_CTR_DRBG_BLOCKSIZE )
     {
-        if ( 0 != mbedtls_aes_crypt_ecb( &aes_ctx, MBEDTLS_AES_ENCRYPT, iv, iv ) )
+        if( ( ret = mbedtls_aes_crypt_ecb( &aes_ctx, MBEDTLS_AES_ENCRYPT, iv, iv ) ) != 0 )
         {
-            ret = MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
             goto exit;
         }
         memcpy( p, iv, MBEDTLS_CTR_DRBG_BLOCKSIZE );
@@ -270,6 +266,7 @@ static int ctr_drbg_update_internal( mbedtls_ctr_drbg_context *ctx,
     unsigned char tmp[MBEDTLS_CTR_DRBG_SEEDLEN];
     unsigned char *p = tmp;
     int i, j;
+    int ret = 0;
 
     memset( tmp, 0, MBEDTLS_CTR_DRBG_SEEDLEN );
 
@@ -285,9 +282,9 @@ static int ctr_drbg_update_internal( mbedtls_ctr_drbg_context *ctx,
         /*
          * Crypt counter block
          */
-        if ( 0 != mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, p ) )
+        if ( ( ret = mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, p ) ) != 0 )
         {
-            return ( MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED );
+            return ( ret );
         }
 
         p += MBEDTLS_CTR_DRBG_BLOCKSIZE;
@@ -299,9 +296,9 @@ static int ctr_drbg_update_internal( mbedtls_ctr_drbg_context *ctx,
     /*
      * Update key and counter
      */
-    if ( 0 != mbedtls_aes_setkey_enc( &ctx->aes_ctx, tmp, MBEDTLS_CTR_DRBG_KEYBITS ) )
+    if ( ( ret = mbedtls_aes_setkey_enc( &ctx->aes_ctx, tmp, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
     {
-        return ( MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED );
+        return ( ret );
     }
     memcpy( ctx->counter, tmp + MBEDTLS_CTR_DRBG_KEYSIZE, MBEDTLS_CTR_DRBG_BLOCKSIZE );
 
@@ -432,9 +429,9 @@ int mbedtls_ctr_drbg_random_with_add( void *p_rng,
         /*
          * Crypt counter block
          */
-        if ( mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, tmp ) != 0 )
+        if( ( ret = mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, tmp ) ) != 0 )
         {
-            return MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
+            return( ret );
         }
 
         use_len = ( output_len > MBEDTLS_CTR_DRBG_BLOCKSIZE ) ? MBEDTLS_CTR_DRBG_BLOCKSIZE :
@@ -447,9 +444,9 @@ int mbedtls_ctr_drbg_random_with_add( void *p_rng,
         output_len -= use_len;
     }
 
-    if ( ctr_drbg_update_internal( ctx, add_input ) != 0 )
+    if( ( ret = ctr_drbg_update_internal( ctx, add_input ) ) != 0 )
     {
-        return MBEDTLS_ERR_CTR_DRBG_AES_CRYPTO_FAILED;
+        return( ret );
     }
 
     ctx->reseed_counter++;
