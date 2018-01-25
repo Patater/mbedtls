@@ -96,7 +96,7 @@ int mbedtls_ctr_drbg_seed_entropy_len(
      */
     if( ( ret = mbedtls_aes_setkey_enc( &ctx->aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
     {
-        return ( ret );
+        return( ret );
     }
 
     if( ( ret = mbedtls_ctr_drbg_reseed( ctx, custom, len ) ) != 0 )
@@ -207,7 +207,7 @@ static int block_cipher_df( unsigned char *output,
             use_len -= ( use_len >= MBEDTLS_CTR_DRBG_BLOCKSIZE ) ?
                        MBEDTLS_CTR_DRBG_BLOCKSIZE : use_len;
 
-            if ( ( ret = mbedtls_aes_crypt_ecb( &aes_ctx, MBEDTLS_AES_ENCRYPT, chain, chain ) ) != 0 )
+            if( ( ret = mbedtls_aes_crypt_ecb( &aes_ctx, MBEDTLS_AES_ENCRYPT, chain, chain ) ) != 0 )
             {
                 goto exit;
             }
@@ -249,7 +249,7 @@ exit:
     mbedtls_zeroize( tmp, sizeof( tmp ) );
     mbedtls_zeroize( key, sizeof( key ) );
     mbedtls_zeroize( chain, sizeof( chain ) );
-    if ( 0 != ret )
+    if( 0 != ret )
     {
         /*
         * wipe partial seed from memory
@@ -282,9 +282,9 @@ static int ctr_drbg_update_internal( mbedtls_ctr_drbg_context *ctx,
         /*
          * Crypt counter block
          */
-        if ( ( ret = mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, p ) ) != 0 )
+        if( ( ret = mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, p ) ) != 0 )
         {
-            return ( ret );
+            return( ret );
         }
 
         p += MBEDTLS_CTR_DRBG_BLOCKSIZE;
@@ -296,9 +296,9 @@ static int ctr_drbg_update_internal( mbedtls_ctr_drbg_context *ctx,
     /*
      * Update key and counter
      */
-    if ( ( ret = mbedtls_aes_setkey_enc( &ctx->aes_ctx, tmp, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
+    if( ( ret = mbedtls_aes_setkey_enc( &ctx->aes_ctx, tmp, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
     {
-        return ( ret );
+        return( ret );
     }
     memcpy( ctx->counter, tmp + MBEDTLS_CTR_DRBG_KEYSIZE, MBEDTLS_CTR_DRBG_BLOCKSIZE );
 
@@ -358,17 +358,17 @@ int mbedtls_ctr_drbg_reseed( mbedtls_ctr_drbg_context *ctx,
     /*
      * Reduce to 384 bits
      */
-    if ( ( ret = block_cipher_df( seed, seed, seedlen ) ) != 0 )
+    if( ( ret = block_cipher_df( seed, seed, seedlen ) ) != 0 )
     {
-        return ret;
+        return( ret );
     }
 
     /*
      * Update state
      */
-    if ( ( ret = ctr_drbg_update_internal( ctx, seed ) ) != 0 )
+    if( ( ret = ctr_drbg_update_internal( ctx, seed ) ) != 0 )
     {
-        return ret;
+        return( ret );
     }
     ctx->reseed_counter = 1;
 
@@ -407,13 +407,13 @@ int mbedtls_ctr_drbg_random_with_add( void *p_rng,
 
     if( add_len > 0 )
     {
-        if ( ( ret = block_cipher_df( add_input, additional, add_len ) ) != 0 )
+        if( ( ret = block_cipher_df( add_input, additional, add_len ) ) != 0 )
         {
-            return ret;
+            return( ret );
         }
-        if ( ( ret = ctr_drbg_update_internal( ctx, add_input ) ) != 0 )
+        if( ( ret = ctr_drbg_update_internal( ctx, add_input ) ) != 0 )
         {
-            return ret;
+            return( ret );
         }
     }
 
