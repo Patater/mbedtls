@@ -2,6 +2,10 @@ mbed TLS ChangeLog (Sorted per branch, date)
 
 = mbed TLS x.x.x branch released xxxx-xx-xx
 
+Features
+    * Implement HKDF per RFC 5869. Contributed by Thomas Fossati.
+    * Implement the TLS 1.3 HKDF.
+
 Bugfix
    * Fix spurious uninitialized variable warning in cmac.c. Fix independently
      contributed by Brian J Murray and David Brown.
