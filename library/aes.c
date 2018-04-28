@@ -525,6 +525,20 @@ void mbedtls_aes_free( mbedtls_aes_context *ctx )
     mbedtls_platform_zeroize( ctx, sizeof( mbedtls_aes_context ) );
 }
 
+#if defined(MBEDTLS_CIPHER_MODE_XTS)
+void mbedtls_aes_xts_init( mbedtls_aes_xts_context *ctx )
+{
+    mbedtls_aes_init( &ctx->crypt );
+    mbedtls_aes_init( &ctx->tweak );
+}
+
+void mbedtls_aes_xts_free( mbedtls_aes_xts_context *ctx )
+{
+    mbedtls_aes_free( &ctx->crypt );
+    mbedtls_aes_free( &ctx->tweak );
+}
+#endif /* MBEDTLS_CIPHER_MODE_XTS */
+
 /*
  * AES key schedule (encryption)
  */
@@ -706,6 +720,47 @@ exit:
 
     return( ret );
 }
+
+#if defined(MBEDTLS_CIPHER_MODE_XTS)
+static int mbedtls_aes_xts_setkey( mbedtls_aes_xts_context *ctx,
+                                   const unsigned char *key,
+                                   unsigned int keybits,
+                                   int (*setkey1)( mbedtls_aes_context *ctx,
+                                                   const unsigned char *key,
+                                                   unsigned int keybits ) )
+{
+    const unsigned int key1bits = keybits / 2;
+    const unsigned int key2bits = keybits / 2;
+    const unsigned int key1bytes = key1bits / 8;
+    const unsigned char *key1 = &key[0];
+    const unsigned char *key2 = &key[key1bytes];
+    int ret;
+
+    ret = mbedtls_aes_setkey_enc( &ctx->tweak, key2, key2bits );
+
+    if( ret )
+        return( ret );
+
+    return( setkey1( &ctx->crypt, key1, key1bits ) );
+}
+
+int mbedtls_aes_xts_setkey_enc( mbedtls_aes_xts_context *ctx,
+                                const unsigned char *key,
+                                unsigned int keybits)
+{
+    return( mbedtls_aes_xts_setkey( ctx, key, keybits,
+                                    mbedtls_aes_setkey_enc ) );
+}
+
+int mbedtls_aes_xts_setkey_dec( mbedtls_aes_xts_context *ctx,
+                                const unsigned char *key,
+                                unsigned int keybits)
+{
+    return( mbedtls_aes_xts_setkey( ctx, key, keybits,
+                                    mbedtls_aes_setkey_dec ) );
+}
+#endif /* MBEDTLS_CIPHER_MODE_XTS */
+
 #endif /* !MBEDTLS_AES_SETKEY_DEC_ALT */
 
 #define AES_FROUND(X0,X1,X2,X3,Y0,Y1,Y2,Y3)         \
@@ -991,31 +1046,29 @@ int mbedtls_aes_crypt_cbc( mbedtls_aes_context *ctx,
 /*
  * AES-XEX buffer encryption/decryption
  */
-int mbedtls_aes_crypt_xex( mbedtls_aes_context *crypt_ctx,
-                    mbedtls_aes_context *tweak_ctx,
-                    int mode,
-                    size_t length,
-                    unsigned char iv[16],
-                    const unsigned char *input,
-                    unsigned char *output )
+int mbedtls_aes_crypt_xex( mbedtls_aes_xts_context *ctx,
+                           int mode,
+                           size_t length,
+                           const unsigned char iv[16],
+                           const unsigned char *input,
+                           unsigned char *output )
 {
     if( length % 16 )
         return( MBEDTLS_ERR_AES_INVALID_INPUT_LENGTH );
 
-    return( mbedtls_aes_crypt_xts( crypt_ctx, tweak_ctx, mode, length,
+    return( mbedtls_aes_crypt_xts( ctx, mode, length,
                                    iv, input, output ) );
 }
 
 /*
  * AES-XTS buffer encryption/decryption
  */
-int mbedtls_aes_crypt_xts( mbedtls_aes_context *crypt_ctx,
-                    mbedtls_aes_context *tweak_ctx,
-                    int mode,
-                    size_t bits_length,
-                    unsigned char iv[16],
-                    const unsigned char *input,
-                    unsigned char *output )
+int mbedtls_aes_crypt_xts( mbedtls_aes_xts_context *ctx,
+                           int mode,
+                           size_t length,
+                           const unsigned char data_unit[16],
+                           const unsigned char *input,
+                           unsigned char *output )
 {
     union xts_buf128 {
         uint8_t  u8[16];
@@ -1029,7 +1082,6 @@ int mbedtls_aes_crypt_xts( mbedtls_aes_context *crypt_ctx,
     union xts_buf128 *inbuf;
     union xts_buf128 *outbuf;
 
-    size_t length = bits_length / 8;
     size_t nblk   = length / 16;
     size_t remn   = length % 16;
 
@@ -1041,8 +1093,11 @@ int mbedtls_aes_crypt_xts( mbedtls_aes_context *crypt_ctx,
     if( length < 16 )
         return( MBEDTLS_ERR_AES_INVALID_INPUT_LENGTH );
 
+    /* NIST SP 80-38E disallows data units larger than 2**20 blocks. */
+    if( ( nblk > 0x100000 ) || ( nblk == 0x100000 && remn > 0 ) )
+        return( MBEDTLS_ERR_AES_INVALID_INPUT_LENGTH );
 
-    mbedtls_aes_crypt_ecb( tweak_ctx, MBEDTLS_AES_ENCRYPT, iv, t_buf.u8 );
+    mbedtls_aes_crypt_ecb( &ctx->tweak, MBEDTLS_AES_ENCRYPT, data_unit, t_buf.u8 );
 
     if( mode == MBEDTLS_AES_DECRYPT && remn )
     {
@@ -1063,7 +1118,7 @@ first:
         scratch.u64[1] = (uint64_t)( inbuf->u64[1] ^ t_buf.u64[1] );
 
         /* CC <- E(Key2,PP) */
-        mbedtls_aes_crypt_ecb( crypt_ctx, mode, scratch.u8, outbuf->u8 );
+        mbedtls_aes_crypt_ecb( &ctx->crypt, mode, scratch.u8, outbuf->u8 );
 
         /* C <- T xor CC */
         outbuf->u64[0] = (uint64_t)( outbuf->u64[0] ^ t_buf.u64[0] );
@@ -1094,7 +1149,7 @@ first:
             scratch.u64[1] = (uint64_t)( cts_scratch.u64[1] ^ t_buf.u64[1] );
 
             /* CC <- E(Key2,PP) */
-            mbedtls_aes_crypt_ecb( crypt_ctx, mode, scratch.u8, scratch.u8 );
+            mbedtls_aes_crypt_ecb( &ctx->crypt, mode, scratch.u8, scratch.u8 );
 
             /* C <- T xor CC */
             outbuf[nblk - 1].u64[0] = (uint64_t)( scratch.u64[0] ^ t_buf.u64[0] );
@@ -1115,7 +1170,7 @@ decrypt_only_one_full_block:
             scratch.u64[1] = (uint64_t)( inbuf[nblk - 1].u64[1] ^ t_buf.u64[1] );
 
             /* CC <- E(Key2,PP) */
-            mbedtls_aes_crypt_ecb( crypt_ctx, mode, scratch.u8, scratch.u8 );
+            mbedtls_aes_crypt_ecb( &ctx->crypt, mode, scratch.u8, scratch.u8 );
 
             /* C <- T xor CC */
             cts_scratch.u64[0] = (uint64_t)( scratch.u64[0] ^ t_buf.u64[0] );
@@ -1132,7 +1187,7 @@ decrypt_only_one_full_block:
             scratch.u64[1] = (uint64_t)( inbuf[nblk - 1].u64[1] ^ cts_t_buf.u64[1] );
 
             /* CC <- E(Key2,PP) */
-            mbedtls_aes_crypt_ecb( crypt_ctx, mode, scratch.u8, scratch.u8 );
+            mbedtls_aes_crypt_ecb( &ctx->crypt, mode, scratch.u8, scratch.u8 );
 
             /* C <- T xor CC */
             outbuf[nblk - 1].u64[0] = (uint64_t)( scratch.u64[0] ^ cts_t_buf.u64[0] );
