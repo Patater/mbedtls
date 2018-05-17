@@ -999,49 +999,11 @@ int mbedtls_aes_crypt_xex( mbedtls_aes_context *crypt_ctx,
                     const unsigned char *input,
                     unsigned char *output )
 {
-    union xex_buf128 {
-        uint8_t  u8[16];
-        uint64_t u64[2];
-    };
-
-    union xex_buf128 scratch;
-    union xex_buf128 t_buf;
-    union xex_buf128 *inbuf;
-    union xex_buf128 *outbuf;
-
-    inbuf = (union xex_buf128*)input;
-    outbuf = (union xex_buf128*)output;
-
     if( length % 16 )
         return( MBEDTLS_ERR_AES_INVALID_INPUT_LENGTH );
 
-
-    mbedtls_aes_crypt_ecb( tweak_ctx, MBEDTLS_AES_ENCRYPT, iv, t_buf.u8 );
-
-    goto first;
-
-    do
-    {
-        mbedtls_gf128mul_x_ble( t_buf.u8, t_buf.u8 );
-
-first:
-        /* PP <- T xor P */
-        scratch.u64[0] = (uint64_t)( inbuf->u64[0] ^ t_buf.u64[0] );
-        scratch.u64[1] = (uint64_t)( inbuf->u64[1] ^ t_buf.u64[1] );
-
-        /* CC <- E(Key2,PP) */
-        mbedtls_aes_crypt_ecb( crypt_ctx, mode, scratch.u8, outbuf->u8 );
-
-        /* C <- T xor CC */
-        outbuf->u64[0] = (uint64_t)( outbuf->u64[0] ^ t_buf.u64[0] );
-        outbuf->u64[1] = (uint64_t)( outbuf->u64[1] ^ t_buf.u64[1] );
-
-        inbuf  += 1;
-        outbuf += 1;
-        length -= 16;
-    } while( length > 0 );
-
-    return( 0 );
+    return( mbedtls_aes_crypt_xts( crypt_ctx, tweak_ctx, mode, length,
+                                   iv, input, output ) );
 }
 
 /*
