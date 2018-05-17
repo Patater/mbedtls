@@ -496,17 +496,10 @@
 #define MBEDTLS_CIPHER_MODE_CBC
 
 /**
- * \def MBEDTLS_CIPHER_MODE_XEX
- *
- * Enable Xor-encrypt-xor mode (XEX) for symmetric ciphers.
- */
-#define MBEDTLS_CIPHER_MODE_XEX
-
-/**
  * \def MBEDTLS_CIPHER_MODE_XTS
  *
- * Enable Xor-encrypt-xor with ciphertext stealing mode (XTS) for symmetric
- * ciphers.
+ * Enable Xor-encrypt-xor (XEX) mode and XEX with ciphertext stealing mode
+ * (XTS) for symmetric ciphers.
  */
 #define MBEDTLS_CIPHER_MODE_XTS
 

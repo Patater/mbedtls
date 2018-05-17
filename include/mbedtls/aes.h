@@ -212,7 +212,7 @@ int mbedtls_aes_crypt_cbc( mbedtls_aes_context *ctx,
                     unsigned char *output );
 #endif /* MBEDTLS_CIPHER_MODE_CBC */
 
-#if defined(MBEDTLS_CIPHER_MODE_XEX)
+#if defined(MBEDTLS_CIPHER_MODE_XTS)
 /**
  * \brief           AES-XEX buffer encryption/decryption
  *                  Length should be a multiple of the block size (16 bytes)
@@ -234,9 +234,7 @@ int mbedtls_aes_crypt_xex( mbedtls_aes_context *crypt_ctx,
                     unsigned char iv[16],
                     const unsigned char *input,
                     unsigned char *output );
-#endif /* MBEDTLS_CIPHER_MODE_XEX */
 
-#if defined(MBEDTLS_CIPHER_MODE_XTS)
 /**
  * \brief           AES-XTS buffer encryption/decryption
  *                  Length should be greater or equal than the block size (16

@@ -44,7 +44,7 @@
 #include "mbedtls/aesni.h"
 #endif
 
-#if defined(MBEDTLS_CIPHER_MODE_XEX) || defined(MBEDTLS_CIPHER_MODE_XTS)
+#if defined(MBEDTLS_CIPHER_MODE_XTS)
 #include "mbedtls/gf128mul.h"
 #endif
 
@@ -987,7 +987,7 @@ int mbedtls_aes_crypt_cbc( mbedtls_aes_context *ctx,
 }
 #endif /* MBEDTLS_CIPHER_MODE_CBC */
 
-#if defined(MBEDTLS_CIPHER_MODE_XEX)
+#if defined(MBEDTLS_CIPHER_MODE_XTS)
 /*
  * AES-XEX buffer encryption/decryption
  */
@@ -1043,9 +1043,7 @@ first:
 
     return( 0 );
 }
-#endif /* MBEDTLS_CIPHER_MODE_XEX */
 
-#if defined(MBEDTLS_CIPHER_MODE_XTS)
 /*
  * AES-XTS buffer encryption/decryption
  */

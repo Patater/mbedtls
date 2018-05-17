@@ -151,7 +151,7 @@ exit:
 }
 /* END_CASE */
 
-/* BEGIN_CASE depends_on:MBEDTLS_CIPHER_MODE_XEX */
+/* BEGIN_CASE depends_on:MBEDTLS_CIPHER_MODE_XTS */
 void aes_encrypt_xex( char *hex_key_string, char *hex_iv_string,
                       char *hex_src_string, char *hex_dst_string,
                       int xex_result )
@@ -188,7 +188,7 @@ exit:
 }
 /* END_CASE */
 
-/* BEGIN_CASE depends_on:MBEDTLS_CIPHER_MODE_XEX */
+/* BEGIN_CASE depends_on:MBEDTLS_CIPHER_MODE_XTS */
 void aes_decrypt_xex( char *hex_key_string, char *hex_iv_string,
                       char *hex_src_string, char *hex_dst_string,
                       int xex_result )

@@ -423,7 +423,7 @@ int main( int argc, char *argv[] )
         mbedtls_aes_free( &aes );
     }
 #endif
-#if defined(MBEDTLS_CIPHER_MODE_XEX)
+#if defined(MBEDTLS_CIPHER_MODE_XTS)
     if( todo.aes_xex )
     {
         int keysize;
@@ -445,8 +445,6 @@ int main( int argc, char *argv[] )
         mbedtls_aes_free( &crypt_ctx );
         mbedtls_aes_free( &tweak_ctx );
     }
-#endif
-#if defined(MBEDTLS_CIPHER_MODE_XTS)
     if( todo.aes_xts )
     {
         int keysize;
