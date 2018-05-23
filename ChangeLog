@@ -2,6 +2,10 @@ mbed TLS ChangeLog (Sorted per branch, date)
 
 = mbed TLS x.x.x branch released xxxx-xx-xx
 
+Features
+   * Add support for the AES-XTS (NIST 800-38E) block cipher mode.
+     Contributed by Aorimn in pull request #414.
+
 API Changes
    * Extend the platform module with a util component that contains
      functionality shared by multiple Mbed TLS modules. At this stage
