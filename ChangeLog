@@ -1,5 +1,11 @@
 mbed TLS ChangeLog (Sorted per branch, date)
 
+= mbed TLS x.xx.x branch released xxxx-xx-xx
+
+Features
+   * Add support for the XTS block cipher mode with AES (AES-XTS).
+     Contributed by Aorimn in pull request #414.
+
 = mbed TLS 2.10.0 branch released 2018-06-06
 
 Features
