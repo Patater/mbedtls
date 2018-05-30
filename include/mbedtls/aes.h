@@ -13,6 +13,9 @@
  *          <em>ISO/IEC 18033-2:2006: Information technology -- Security
  *          techniques -- Encryption algorithms -- Part 2: Asymmetric
  *          ciphers</em>.
+ *
+ *          The AEX-XTS block mode is standardized by NIST 800-38E
+ *          <https://nvlpubs.nist.gov/nistpubs/legacy/sp/nistspecialpublication800-38e.pdf>.
  */
 
 /*  Copyright (C) 2006-2018, Arm Limited (or its affiliates), All Rights Reserved.
