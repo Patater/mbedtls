@@ -622,7 +622,7 @@ static const unsigned char kwp_res[KW_TESTS][48] = {
     { 0x06, 0xba, 0x7a, 0xe6, 0xf3, 0x24, 0x8c, 0xfd,
       0xcf, 0x26, 0x75, 0x07, 0xfa, 0x00, 0x1b, 0xc4  }
 };
-static const size_t kwp_out_len[KW_TESTS] = { 24, 40, 16 };
+static const unsigned int kwp_out_len[KW_TESTS] = { 24, 40, 16 };
 
 int mbedtls_nist_kw_self_test( int verbose )
 {
@@ -630,7 +630,7 @@ int mbedtls_nist_kw_self_test( int verbose )
     unsigned char out[48];
     size_t olen;
     int i;
-    int ret;
+    int ret = 0;
     mbedtls_nist_kw_init( &ctx );
 
     for( i = 0; i < KW_TESTS; i++ )
