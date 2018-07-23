@@ -542,7 +542,7 @@ cleanup:
  * Test vectors taken from NIST
  * https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/CAVP-TESTING-BLOCK-CIPHER-MODES#KW
  */
-static const size_t key_len[KW_TESTS] = { 16, 24, 32 };
+static const unsigned int key_len[KW_TESTS] = { 16, 24, 32 };
 
 static const unsigned char kw_key[KW_TESTS][32] = {
     { 0x75, 0x75, 0xda, 0x3a, 0x93, 0x60, 0x7c, 0xc2,
@@ -622,7 +622,7 @@ static const unsigned char kwp_res[KW_TESTS][48] = {
     { 0x06, 0xba, 0x7a, 0xe6, 0xf3, 0x24, 0x8c, 0xfd,
       0xcf, 0x26, 0x75, 0x07, 0xfa, 0x00, 0x1b, 0xc4  }
 };
-static const unsigned int kwp_out_len[KW_TESTS] = { 24, 40, 16 };
+static const size_t kwp_out_len[KW_TESTS] = { 24, 40, 16 };
 
 int mbedtls_nist_kw_self_test( int verbose )
 {
