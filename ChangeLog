@@ -62,6 +62,7 @@ Changes
      mbedtls_ssl_get_record_expansion() in case of ChachaPoly ciphersuites,
      or CBC ciphersuites in (D)TLS versions 1.1 or higher. Fixes #1913, #1914.
    * Add support for buffering of out-of-order handshake messages.
+   * Change the RSA PKCS#1 V2.1 sign to be FIPS-186-4 compliant.
 
 INTERNAL NOTE: need to bump soversion of libmbedtls:
 - added new member 'mtu' to public 'mbedtls_ssl_conf' structure

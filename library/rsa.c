@@ -1550,7 +1550,12 @@ int mbedtls_rsa_rsassa_pss_sign( mbedtls_rsa_context *ctx,
         return( MBEDTLS_ERR_RSA_BAD_INPUT_DATA );
 
     hlen = mbedtls_md_get_size( md_info );
-    slen = hlen;
+
+    /* Align with FIPS-186-4 */
+    if ( olen == 128 && hlen == 64 )
+        slen = hlen - 2;
+    else
+        slen = hlen;
 
     if( olen < hlen + slen + 2 )
         return( MBEDTLS_ERR_RSA_BAD_INPUT_DATA );
