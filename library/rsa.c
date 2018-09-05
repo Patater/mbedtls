@@ -1551,7 +1551,10 @@ int mbedtls_rsa_rsassa_pss_sign( mbedtls_rsa_context *ctx,
 
     hlen = mbedtls_md_get_size( md_info );
 
-    /* Align with FIPS-186-4 */
+    /* According to FIPS-186-4 section 5.5 (e) the salt length shall
+     * satisfy (0 < slen <= hlen - 2) in case of modulus 1024-bits with approved
+     * hash output length 512-bits. This change allow the sign to be done in 
+     * FIPS compliant way. */
     if ( olen == 128 && hlen == 64 )
         slen = hlen - 2;
     else
