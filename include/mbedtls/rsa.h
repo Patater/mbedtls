@@ -894,6 +894,15 @@ int mbedtls_rsa_rsassa_pkcs1_v15_sign( mbedtls_rsa_context *ctx,
  *                 Specifications</em> it is advised to keep both hashes the
  *                 same.
  *
+ * \note           This function calculates and uses the largest possible salt
+ *                 size. Normally this is the hash size, which is the maximum
+ *                 size the salt can have. If there is not enough room, use the
+ *                 maximum salt size that fits, but always use at least hash
+ *                 size - 2 bytes of salt. The constraint is that the hash size
+ *                 plus the salt size plus 2 bytes must be at most the key
+ *                 size. This complies with FIPS 186-4 §5.5 (e) and RFC 8017
+ *                 (PKCS#1 v2.2) §9.1.1 step 3.
+ *
  * \deprecated     It is deprecated and discouraged to call this function
  *                 in #MBEDTLS_RSA_PUBLIC mode. Future versions of the library
  *                 are likely to remove the \p mode argument and have it

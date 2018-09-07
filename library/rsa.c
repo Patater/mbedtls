@@ -1551,17 +1551,16 @@ int mbedtls_rsa_rsassa_pss_sign( mbedtls_rsa_context *ctx,
 
     hlen = mbedtls_md_get_size( md_info );
 
-    /* According to FIPS-186-4 section 5.5 (e) the salt length shall
-     * satisfy (0 < slen <= hlen - 2) in case of modulus 1024-bits with approved
-     * hash output length 512-bits. This change allow the sign to be done in 
-     * FIPS compliant way. */
-    if ( olen == 128 && hlen == 64 )
-        slen = hlen - 2;
-    else
-        slen = hlen;
-
-    if( olen < hlen + slen + 2 )
+    /* Calculate the largest possible salt length. The salt length chosen will
+     * be the minimum of either the hash length or the key size minus the hash
+     * length minus 2 bytes. The salt length is always at least the hash length
+     * minus 2 bytes. This complies with FIPS 186-4 §5.5 (e) and RFC 8017
+     * (PKCS#1 v2.2) §9.1.1 step 3. */
+    const size_t max_slen = olen - hlen - 2;
+    slen = max_slen < hlen ? max_slen : hlen;
+    if (slen < hlen - 2) {
         return( MBEDTLS_ERR_RSA_BAD_INPUT_DATA );
+    }
 
     memset( sig, 0, olen );
 
