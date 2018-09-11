@@ -1553,9 +1553,9 @@ int mbedtls_rsa_rsassa_pss_sign( mbedtls_rsa_context *ctx,
 
     /* Calculate the largest possible salt length. The salt length chosen will
      * be the minimum of either the hash length or the key size minus the hash
-     * length minus 2 bytes. The salt length is always at least the hash length
-     * minus 2 bytes. This complies with FIPS 186-4 §5.5 (e) and RFC 8017
-     * (PKCS#1 v2.2) §9.1.1 step 3. */
+     * length minus 2 bytes. This complies with FIPS 186-4 §5.5 (e) and RFC
+     * 8017 (PKCS#1 v2.2) §9.1.1 step 3. The salt length is always at least the
+     * hash length minus 2 bytes. */
     max_slen = olen - hlen - 2;
     slen = max_slen < hlen ? max_slen : hlen;
     if (slen < hlen - 2) {
