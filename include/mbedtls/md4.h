@@ -38,8 +38,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define MBEDTLS_ERR_MD4_HW_ACCEL_FAILED                   -0x002D  /**< MD4 hardware accelerator failed */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

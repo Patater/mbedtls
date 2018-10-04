@@ -33,8 +33,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define MBEDTLS_ERR_RIPEMD160_HW_ACCEL_FAILED             -0x0031  /**< RIPEMD160 hardware accelerator failed */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

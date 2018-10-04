@@ -37,8 +37,6 @@
 
 #include <stddef.h>
 
-#define MBEDTLS_ERR_MD2_HW_ACCEL_FAILED                   -0x002B  /**< MD2 hardware accelerator failed */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

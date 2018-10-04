@@ -36,8 +36,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define MBEDTLS_ERR_SHA256_HW_ACCEL_FAILED                -0x0037  /**< SHA-256 hardware accelerator failed */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

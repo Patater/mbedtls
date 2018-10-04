@@ -45,10 +45,6 @@
 #include "mbedtls/aes.h"
 #endif
 
-#if defined(MBEDTLS_ARC4_C)
-#include "mbedtls/arc4.h"
-#endif
-
 #if defined(MBEDTLS_ARIA_C)
 #include "mbedtls/aria.h"
 #endif
@@ -83,10 +79,6 @@
 
 #if defined(MBEDTLS_CIPHER_C)
 #include "mbedtls/cipher.h"
-#endif
-
-#if defined(MBEDTLS_CMAC_C)
-#include "mbedtls/cmac.h"
 #endif
 
 #if defined(MBEDTLS_CTR_DRBG_C)
@@ -125,18 +117,6 @@
 #include "mbedtls/md.h"
 #endif
 
-#if defined(MBEDTLS_MD2_C)
-#include "mbedtls/md2.h"
-#endif
-
-#if defined(MBEDTLS_MD4_C)
-#include "mbedtls/md4.h"
-#endif
-
-#if defined(MBEDTLS_MD5_C)
-#include "mbedtls/md5.h"
-#endif
-
 #if defined(MBEDTLS_NET_C)
 #include "mbedtls/net_sockets.h"
 #endif
@@ -173,24 +153,8 @@
 #include "mbedtls/poly1305.h"
 #endif
 
-#if defined(MBEDTLS_RIPEMD160_C)
-#include "mbedtls/ripemd160.h"
-#endif
-
 #if defined(MBEDTLS_RSA_C)
 #include "mbedtls/rsa.h"
-#endif
-
-#if defined(MBEDTLS_SHA1_C)
-#include "mbedtls/sha1.h"
-#endif
-
-#if defined(MBEDTLS_SHA256_C)
-#include "mbedtls/sha256.h"
-#endif
-
-#if defined(MBEDTLS_SHA512_C)
-#include "mbedtls/sha512.h"
 #endif
 
 #if defined(MBEDTLS_SSL_TLS_C)
@@ -245,8 +209,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
             mbedtls_snprintf( buf, buflen, "CIPHER - Authentication failed (for AEAD modes)" );
         if( use_ret == -(MBEDTLS_ERR_CIPHER_INVALID_CONTEXT) )
             mbedtls_snprintf( buf, buflen, "CIPHER - The context is invalid. For example, because it was freed" );
-        if( use_ret == -(MBEDTLS_ERR_CIPHER_HW_ACCEL_FAILED) )
-            mbedtls_snprintf( buf, buflen, "CIPHER - Cipher hardware accelerator failed" );
 #endif /* MBEDTLS_CIPHER_C */
 
 #if defined(MBEDTLS_DHM_C)
@@ -268,8 +230,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
             mbedtls_snprintf( buf, buflen, "DHM - Allocation of memory failed" );
         if( use_ret == -(MBEDTLS_ERR_DHM_FILE_IO_ERROR) )
             mbedtls_snprintf( buf, buflen, "DHM - Read or write of file failed" );
-        if( use_ret == -(MBEDTLS_ERR_DHM_HW_ACCEL_FAILED) )
-            mbedtls_snprintf( buf, buflen, "DHM - DHM hardware accelerator failed" );
         if( use_ret == -(MBEDTLS_ERR_DHM_SET_GROUP_FAILED) )
             mbedtls_snprintf( buf, buflen, "DHM - Setting the modulus and generator failed" );
 #endif /* MBEDTLS_DHM_C */
@@ -291,8 +251,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
             mbedtls_snprintf( buf, buflen, "ECP - Invalid private or public key" );
         if( use_ret == -(MBEDTLS_ERR_ECP_SIG_LEN_MISMATCH) )
             mbedtls_snprintf( buf, buflen, "ECP - The buffer contains a valid signature followed by more data" );
-        if( use_ret == -(MBEDTLS_ERR_ECP_HW_ACCEL_FAILED) )
-            mbedtls_snprintf( buf, buflen, "ECP - The ECP hardware accelerator failed" );
         if( use_ret == -(MBEDTLS_ERR_ECP_IN_PROGRESS) )
             mbedtls_snprintf( buf, buflen, "ECP - Operation in progress, call again with the same parameters to continue" );
 #endif /* MBEDTLS_ECP_C */
@@ -306,8 +264,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
             mbedtls_snprintf( buf, buflen, "MD - Failed to allocate memory" );
         if( use_ret == -(MBEDTLS_ERR_MD_FILE_IO_ERROR) )
             mbedtls_snprintf( buf, buflen, "MD - Opening or reading of file failed" );
-        if( use_ret == -(MBEDTLS_ERR_MD_HW_ACCEL_FAILED) )
-            mbedtls_snprintf( buf, buflen, "MD - MD hardware accelerator failed" );
 #endif /* MBEDTLS_MD_C */
 
 #if defined(MBEDTLS_PEM_PARSE_C) || defined(MBEDTLS_PEM_WRITE_C)
@@ -360,8 +316,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
             mbedtls_snprintf( buf, buflen, "PK - Unavailable feature, e.g. RSA disabled for RSA key" );
         if( use_ret == -(MBEDTLS_ERR_PK_SIG_LEN_MISMATCH) )
             mbedtls_snprintf( buf, buflen, "PK - The buffer contains a valid signature followed by more data" );
-        if( use_ret == -(MBEDTLS_ERR_PK_HW_ACCEL_FAILED) )
-            mbedtls_snprintf( buf, buflen, "PK - PK hardware accelerator failed" );
 #endif /* MBEDTLS_PK_C */
 
 #if defined(MBEDTLS_PKCS12_C)
@@ -405,10 +359,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
             mbedtls_snprintf( buf, buflen, "RSA - The output buffer for decryption is not large enough" );
         if( use_ret == -(MBEDTLS_ERR_RSA_RNG_FAILED) )
             mbedtls_snprintf( buf, buflen, "RSA - The random generator failed to generate non-zeros" );
-        if( use_ret == -(MBEDTLS_ERR_RSA_UNSUPPORTED_OPERATION) )
-            mbedtls_snprintf( buf, buflen, "RSA - The implementation does not offer the requested operation, for example, because of security violations or lack of functionality" );
-        if( use_ret == -(MBEDTLS_ERR_RSA_HW_ACCEL_FAILED) )
-            mbedtls_snprintf( buf, buflen, "RSA - RSA hardware accelerator failed" );
 #endif /* MBEDTLS_RSA_C */
 
 #if defined(MBEDTLS_SSL_TLS_C)
@@ -606,26 +556,13 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
         mbedtls_snprintf( buf, buflen, "AES - Invalid data input length" );
     if( use_ret == -(MBEDTLS_ERR_AES_BAD_INPUT_DATA) )
         mbedtls_snprintf( buf, buflen, "AES - Invalid input data" );
-    if( use_ret == -(MBEDTLS_ERR_AES_FEATURE_UNAVAILABLE) )
-        mbedtls_snprintf( buf, buflen, "AES - Feature not available. For example, an unsupported AES key size" );
-    if( use_ret == -(MBEDTLS_ERR_AES_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "AES - AES hardware accelerator failed" );
 #endif /* MBEDTLS_AES_C */
-
-#if defined(MBEDTLS_ARC4_C)
-    if( use_ret == -(MBEDTLS_ERR_ARC4_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "ARC4 - ARC4 hardware accelerator failed" );
-#endif /* MBEDTLS_ARC4_C */
 
 #if defined(MBEDTLS_ARIA_C)
     if( use_ret == -(MBEDTLS_ERR_ARIA_INVALID_KEY_LENGTH) )
         mbedtls_snprintf( buf, buflen, "ARIA - Invalid key length" );
     if( use_ret == -(MBEDTLS_ERR_ARIA_INVALID_INPUT_LENGTH) )
         mbedtls_snprintf( buf, buflen, "ARIA - Invalid data input length" );
-    if( use_ret == -(MBEDTLS_ERR_ARIA_FEATURE_UNAVAILABLE) )
-        mbedtls_snprintf( buf, buflen, "ARIA - Feature not available. For example, an unsupported ARIA key size" );
-    if( use_ret == -(MBEDTLS_ERR_ARIA_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "ARIA - ARIA hardware accelerator failed" );
 #endif /* MBEDTLS_ARIA_C */
 
 #if defined(MBEDTLS_ASN1_PARSE_C)
@@ -674,8 +611,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
 #if defined(MBEDTLS_BLOWFISH_C)
     if( use_ret == -(MBEDTLS_ERR_BLOWFISH_INVALID_KEY_LENGTH) )
         mbedtls_snprintf( buf, buflen, "BLOWFISH - Invalid key length" );
-    if( use_ret == -(MBEDTLS_ERR_BLOWFISH_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "BLOWFISH - Blowfish hardware accelerator failed" );
     if( use_ret == -(MBEDTLS_ERR_BLOWFISH_INVALID_INPUT_LENGTH) )
         mbedtls_snprintf( buf, buflen, "BLOWFISH - Invalid data input length" );
 #endif /* MBEDTLS_BLOWFISH_C */
@@ -685,8 +620,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
         mbedtls_snprintf( buf, buflen, "CAMELLIA - Invalid key length" );
     if( use_ret == -(MBEDTLS_ERR_CAMELLIA_INVALID_INPUT_LENGTH) )
         mbedtls_snprintf( buf, buflen, "CAMELLIA - Invalid data input length" );
-    if( use_ret == -(MBEDTLS_ERR_CAMELLIA_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "CAMELLIA - Camellia hardware accelerator failed" );
 #endif /* MBEDTLS_CAMELLIA_C */
 
 #if defined(MBEDTLS_CCM_C)
@@ -694,17 +627,11 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
         mbedtls_snprintf( buf, buflen, "CCM - Bad input parameters to the function" );
     if( use_ret == -(MBEDTLS_ERR_CCM_AUTH_FAILED) )
         mbedtls_snprintf( buf, buflen, "CCM - Authenticated decryption failed" );
-    if( use_ret == -(MBEDTLS_ERR_CCM_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "CCM - CCM hardware accelerator failed" );
 #endif /* MBEDTLS_CCM_C */
 
 #if defined(MBEDTLS_CHACHA20_C)
     if( use_ret == -(MBEDTLS_ERR_CHACHA20_BAD_INPUT_DATA) )
         mbedtls_snprintf( buf, buflen, "CHACHA20 - Invalid input parameter(s)" );
-    if( use_ret == -(MBEDTLS_ERR_CHACHA20_FEATURE_UNAVAILABLE) )
-        mbedtls_snprintf( buf, buflen, "CHACHA20 - Feature not available. For example, s part of the API is not implemented" );
-    if( use_ret == -(MBEDTLS_ERR_CHACHA20_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "CHACHA20 - Chacha20 hardware accelerator failed" );
 #endif /* MBEDTLS_CHACHA20_C */
 
 #if defined(MBEDTLS_CHACHAPOLY_C)
@@ -713,11 +640,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
     if( use_ret == -(MBEDTLS_ERR_CHACHAPOLY_AUTH_FAILED) )
         mbedtls_snprintf( buf, buflen, "CHACHAPOLY - Authenticated decryption failed: data was not authentic" );
 #endif /* MBEDTLS_CHACHAPOLY_C */
-
-#if defined(MBEDTLS_CMAC_C)
-    if( use_ret == -(MBEDTLS_ERR_CMAC_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "CMAC - CMAC hardware accelerator failed" );
-#endif /* MBEDTLS_CMAC_C */
 
 #if defined(MBEDTLS_CTR_DRBG_C)
     if( use_ret == -(MBEDTLS_ERR_CTR_DRBG_ENTROPY_SOURCE_FAILED) )
@@ -733,8 +655,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
 #if defined(MBEDTLS_DES_C)
     if( use_ret == -(MBEDTLS_ERR_DES_INVALID_INPUT_LENGTH) )
         mbedtls_snprintf( buf, buflen, "DES - The data input has an invalid length" );
-    if( use_ret == -(MBEDTLS_ERR_DES_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "DES - DES hardware accelerator failed" );
 #endif /* MBEDTLS_DES_C */
 
 #if defined(MBEDTLS_ENTROPY_C)
@@ -753,8 +673,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
 #if defined(MBEDTLS_GCM_C)
     if( use_ret == -(MBEDTLS_ERR_GCM_AUTH_FAILED) )
         mbedtls_snprintf( buf, buflen, "GCM - Authenticated decryption failed" );
-    if( use_ret == -(MBEDTLS_ERR_GCM_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "GCM - GCM hardware accelerator failed" );
     if( use_ret == -(MBEDTLS_ERR_GCM_BAD_INPUT) )
         mbedtls_snprintf( buf, buflen, "GCM - Bad input parameters to function" );
 #endif /* MBEDTLS_GCM_C */
@@ -774,21 +692,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
     if( use_ret == -(MBEDTLS_ERR_HMAC_DRBG_ENTROPY_SOURCE_FAILED) )
         mbedtls_snprintf( buf, buflen, "HMAC_DRBG - The entropy source failed" );
 #endif /* MBEDTLS_HMAC_DRBG_C */
-
-#if defined(MBEDTLS_MD2_C)
-    if( use_ret == -(MBEDTLS_ERR_MD2_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "MD2 - MD2 hardware accelerator failed" );
-#endif /* MBEDTLS_MD2_C */
-
-#if defined(MBEDTLS_MD4_C)
-    if( use_ret == -(MBEDTLS_ERR_MD4_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "MD4 - MD4 hardware accelerator failed" );
-#endif /* MBEDTLS_MD4_C */
-
-#if defined(MBEDTLS_MD5_C)
-    if( use_ret == -(MBEDTLS_ERR_MD5_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "MD5 - MD5 hardware accelerator failed" );
-#endif /* MBEDTLS_MD5_C */
 
 #if defined(MBEDTLS_NET_C)
     if( use_ret == -(MBEDTLS_ERR_NET_SOCKET_FAILED) )
@@ -841,35 +744,9 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
 #if defined(MBEDTLS_POLY1305_C)
     if( use_ret == -(MBEDTLS_ERR_POLY1305_BAD_INPUT_DATA) )
         mbedtls_snprintf( buf, buflen, "POLY1305 - Invalid input parameter(s)" );
-    if( use_ret == -(MBEDTLS_ERR_POLY1305_FEATURE_UNAVAILABLE) )
-        mbedtls_snprintf( buf, buflen, "POLY1305 - Feature not available. For example, s part of the API is not implemented" );
-    if( use_ret == -(MBEDTLS_ERR_POLY1305_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "POLY1305 - Poly1305 hardware accelerator failed" );
 #endif /* MBEDTLS_POLY1305_C */
 
-#if defined(MBEDTLS_RIPEMD160_C)
-    if( use_ret == -(MBEDTLS_ERR_RIPEMD160_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "RIPEMD160 - RIPEMD160 hardware accelerator failed" );
-#endif /* MBEDTLS_RIPEMD160_C */
-
-#if defined(MBEDTLS_SHA1_C)
-    if( use_ret == -(MBEDTLS_ERR_SHA1_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "SHA1 - SHA-1 hardware accelerator failed" );
-#endif /* MBEDTLS_SHA1_C */
-
-#if defined(MBEDTLS_SHA256_C)
-    if( use_ret == -(MBEDTLS_ERR_SHA256_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "SHA256 - SHA-256 hardware accelerator failed" );
-#endif /* MBEDTLS_SHA256_C */
-
-#if defined(MBEDTLS_SHA512_C)
-    if( use_ret == -(MBEDTLS_ERR_SHA512_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "SHA512 - SHA-512 hardware accelerator failed" );
-#endif /* MBEDTLS_SHA512_C */
-
 #if defined(MBEDTLS_THREADING_C)
-    if( use_ret == -(MBEDTLS_ERR_THREADING_FEATURE_UNAVAILABLE) )
-        mbedtls_snprintf( buf, buflen, "THREADING - The selected feature is not available" );
     if( use_ret == -(MBEDTLS_ERR_THREADING_BAD_INPUT_DATA) )
         mbedtls_snprintf( buf, buflen, "THREADING - Bad input parameters to function" );
     if( use_ret == -(MBEDTLS_ERR_THREADING_MUTEX_ERROR) )
@@ -879,8 +756,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
 #if defined(MBEDTLS_XTEA_C)
     if( use_ret == -(MBEDTLS_ERR_XTEA_INVALID_INPUT_LENGTH) )
         mbedtls_snprintf( buf, buflen, "XTEA - The data input has an invalid length" );
-    if( use_ret == -(MBEDTLS_ERR_XTEA_HW_ACCEL_FAILED) )
-        mbedtls_snprintf( buf, buflen, "XTEA - XTEA hardware accelerator failed" );
 #endif /* MBEDTLS_XTEA_C */
     // END generated code
 
