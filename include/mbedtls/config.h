@@ -1156,6 +1156,24 @@
 #define MBEDTLS_PKCS1_V21
 
 /**
+ * \def MBEDTLS_PSA_CRYPTO_SPM
+ *
+ * When MBEDTLS_PSA_CRYPTO_SPM is defined, the code is built for SPM (Secure
+ * Partition Manager) integration which separates the code into two parts: a
+ * NSPE (Non-Secure Process Environment) and an SPE (Secure Process
+ * Environment).
+ *
+ * \warning This feature is experimental and available on an opt-in basis only.
+ * PSA APIs are subject to change. The implementation comes with less assurance
+ * and support than the rest of Mbed TLS.
+ *
+ * Module:  library/psa_crypto.c
+ * Requires: MBEDTLS_PSA_CRYPTO_C
+ *
+ */
+//#define MBEDTLS_PSA_CRYPTO_SPM
+
+/**
  * \def MBEDTLS_RSA_NO_CRT
  *
  * Do not use the Chinese Remainder Theorem
@@ -2583,6 +2601,22 @@
  * Caller:  library/chachapoly.c
  */
 #define MBEDTLS_POLY1305_C
+
+/**
+* \def MBEDTLS_PSA_CRYPTO_C
+ *
+ * Enable the Platform Security Architecture cryptography API.
+ *
+ * \warning This feature is experimental and available on an opt-in basis only.
+ * PSA APIs are subject to change. The implementation comes with less assurance
+ * and support than the rest of Mbed TLS.
+ *
+ * Module:  library/psa_crypto.c
+ *
+ * Requires: MBEDTLS_CTR_DRBG_C, MBEDTLS_ENTROPY_C
+ *
+ */
+//#define MBEDTLS_PSA_CRYPTO_C
 
 /**
  * \def MBEDTLS_RIPEMD160_C
