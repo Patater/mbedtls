@@ -9,6 +9,7 @@ option(USE_PKCS11_HELPER_LIBRARY "Build mbed TLS with the pkcs11-helper library.
 option(ENABLE_ZLIB_SUPPORT "Build mbed TLS with zlib library." OFF)
 
 option(ENABLE_PROGRAMS "Build mbed TLS programs." ON)
+option(ENABLE_PSA "Build and use PSA APIs." OFF)
 
 option(UNSAFE_BUILD "Allow unsafe builds. These builds ARE NOT SECURE." OFF)
 
@@ -162,11 +163,16 @@ endif(ENABLE_ZLIB_SUPPORT)
 
 add_subdirectory(library)
 add_subdirectory(include)
-add_subdirectory(crypto/library)
-add_subdirectory(crypto/include)
+if(ENABLE_PSA)
+    add_subdirectory(crypto/library)
+    add_subdirectory(crypto/include)
+endif()
 
 if(ENABLE_PROGRAMS)
     add_subdirectory(programs)
+    if(ENABLE_PSA)
+        add_subdirectory(crypto/programs)
+    endif()
 endif()
 
 ADD_CUSTOM_TARGET(apidoc
