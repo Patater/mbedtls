@@ -18,10 +18,10 @@ ifdef ENABLE_PSA
 endif
 
 lib:
-	$(MAKE) -C library
 ifdef ENABLE_PSA
 	$(MAKE) -C crypto/library
 endif
+	$(MAKE) -C library
 
 tests: lib
 	$(MAKE) -C tests
@@ -113,9 +113,7 @@ clean:
 	$(MAKE) -C programs clean
 	$(MAKE) -C tests clean
 ifdef ENABLE_PSA
-	$(MAKE) -C crypto/library clean
-	$(MAKE) -C crypto/programs clean
-	$(MAKE) -C crypto/tests clean
+	$(MAKE) -C crypto clean
 endif
 ifndef WINDOWS
 	find . \( -name \*.gcno -o -name \*.gcda -o -name \*.info \) -exec rm {} +
