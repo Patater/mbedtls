@@ -10,10 +10,10 @@ if(ENABLE_ZLIB_SUPPORT)
     set(libs ${libs} ${ZLIB_LIBRARIES})
 endif(ENABLE_ZLIB_SUPPORT)
 
-if(!ENABLE_PSA)
-    add_executable(selftest selftest.c)
-    target_link_libraries(selftest ${libs})
+add_executable(selftest selftest.c)
+target_link_libraries(selftest ${libs})
 
+if(!ENABLE_PSA)
     add_executable(benchmark benchmark.c)
     target_link_libraries(benchmark ${libs})
 endif()
