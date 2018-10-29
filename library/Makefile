@@ -63,6 +63,7 @@ DLEXT = dylib
 endif
 endif
 
+ifndef ENABLE_PSA
 OBJS_CRYPTO=	aes.o		aesni.o		arc4.o		\
 		aria.o		asn1parse.o	asn1write.o	\
 		base64.o	bignum.o	blowfish.o	\
@@ -85,6 +86,7 @@ OBJS_CRYPTO=	aes.o		aesni.o		arc4.o		\
 		sha1.o		sha256.o	sha512.o	\
 		threading.o	timing.o	version.o	\
 		version_features.o		xtea.o
+endif
 
 OBJS_X509=	certs.o		pkcs11.o	x509.o		\
 		x509_create.o	x509_crl.o	x509_crt.o	\
@@ -106,9 +108,17 @@ else
 all: shared static
 endif
 
+ifdef ENABLE_PSA
+static: libmbedx509.a libmbedtls.a
+else
 static: libmbedcrypto.a libmbedx509.a libmbedtls.a
+endif
 
+ifdef ENABLE_PSA
+shared: libmbedx509.$(DLEXT) libmbedtls.$(DLEXT)
+else
 shared: libmbedcrypto.$(DLEXT) libmbedx509.$(DLEXT) libmbedtls.$(DLEXT)
+endif
 
 # tls
 libmbedtls.a: $(OBJS_TLS)
@@ -165,6 +175,7 @@ libmbedx509.dll: $(OBJS_X509) libmbedcrypto.dll
 	$(CC) -shared -Wl,-soname,$@ -Wl,--out-implib,$@.a -o $@ $(OBJS_X509) -lws2_32 -lwinmm -lgdi32 -L. -lmbedcrypto -static-libgcc $(LOCAL_LDFLAGS) $(LDFLAGS)
 
 # crypto
+ifndef ENABLE_PSA
 libmbedcrypto.a: $(OBJS_CRYPTO)
 	echo "  AR    $@"
 	$(AR) $(ARFLAGS) $@ $(OBJS_CRYPTO)
@@ -190,6 +201,7 @@ libmbedcrypto.dylib: $(OBJS_CRYPTO)
 libmbedcrypto.dll: $(OBJS_CRYPTO)
 	echo "  LD    $@"
 	$(CC) -shared -Wl,-soname,$@ -Wl,--out-implib,$@.a -o $@ $(OBJS_CRYPTO) -lws2_32 -lwinmm -lgdi32 -static-libgcc $(LOCAL_LDFLAGS) $(LDFLAGS)
+endif
 
 .c.o:
 	echo "  CC    $<"
