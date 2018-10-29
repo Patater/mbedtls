@@ -173,6 +173,10 @@ typedef struct
 
 const selftest_t selftests[] =
 {
+#if defined(MBEDTLS_X509_USE_C)
+    {"x509", mbedtls_x509_self_test},
+#endif
+#if !defined(MBEDTLS_PSA_CRYPTO_C)
 #if defined(MBEDTLS_MD2_C)
     {"md2", mbedtls_md2_self_test},
 #endif
@@ -233,9 +237,6 @@ const selftest_t selftests[] =
 #if defined(MBEDTLS_RSA_C)
     {"rsa", mbedtls_rsa_self_test},
 #endif
-#if defined(MBEDTLS_X509_USE_C)
-    {"x509", mbedtls_x509_self_test},
-#endif
 #if defined(MBEDTLS_XTEA_C)
     {"xtea", mbedtls_xtea_self_test},
 #endif
@@ -273,6 +274,7 @@ const selftest_t selftests[] =
 /* Heap test comes last */
 #if defined(MBEDTLS_MEMORY_BUFFER_ALLOC_C)
     {"memory_buffer_alloc", mbedtls_memory_buffer_alloc_free_and_self_test},
+#endif
 #endif
     {NULL, NULL}
 };
