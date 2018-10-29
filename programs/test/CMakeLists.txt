@@ -10,11 +10,13 @@ if(ENABLE_ZLIB_SUPPORT)
     set(libs ${libs} ${ZLIB_LIBRARIES})
 endif(ENABLE_ZLIB_SUPPORT)
 
-add_executable(selftest selftest.c)
-target_link_libraries(selftest ${libs})
+if(!ENABLE_PSA)
+    add_executable(selftest selftest.c)
+    target_link_libraries(selftest ${libs})
 
-add_executable(benchmark benchmark.c)
-target_link_libraries(benchmark ${libs})
+    add_executable(benchmark benchmark.c)
+    target_link_libraries(benchmark ${libs})
+endif()
 
 if(TEST_CPP)
     add_executable(cpp_dummy_build cpp_dummy_build.cpp)
@@ -30,6 +32,12 @@ target_link_libraries(udp_proxy ${libs})
 add_executable(zeroize zeroize.c)
 target_link_libraries(zeroize ${libs})
 
+if(ENABLE_PSA)
+install(TARGETS ssl_cert_test udp_proxy
+        DESTINATION "bin"
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+else()
 install(TARGETS selftest benchmark ssl_cert_test udp_proxy
         DESTINATION "bin"
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+endif()
