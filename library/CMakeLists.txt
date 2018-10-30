@@ -145,7 +145,6 @@ if(USE_STATIC_MBEDTLS_LIBRARY)
         set_target_properties(${mbedcrypto_static_target} PROPERTIES OUTPUT_NAME mbedcrypto)
         target_link_libraries(${mbedcrypto_static_target} ${libs})
         target_include_directories(${mbedcrypto_static_target} PUBLIC ${CMAKE_SOURCE_DIR}/include/)
-
     endif()
 
     add_library(${mbedx509_static_target} STATIC ${src_x509})
