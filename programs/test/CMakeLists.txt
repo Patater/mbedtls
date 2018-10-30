@@ -13,7 +13,7 @@ endif(ENABLE_ZLIB_SUPPORT)
 add_executable(selftest selftest.c)
 target_link_libraries(selftest ${libs})
 
-if(!ENABLE_PSA)
+if(!USE_CRYPTO_SUBMODULE)
     add_executable(benchmark benchmark.c)
     target_link_libraries(benchmark ${libs})
 endif()
@@ -32,7 +32,7 @@ target_link_libraries(udp_proxy ${libs})
 add_executable(zeroize zeroize.c)
 target_link_libraries(zeroize ${libs})
 
-if(ENABLE_PSA)
+if(USE_CRYPTO_SUBMODULE)
 install(TARGETS ssl_cert_test udp_proxy
         DESTINATION "bin"
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

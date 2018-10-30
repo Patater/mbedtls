@@ -140,7 +140,7 @@ elseif(USE_STATIC_MBEDTLS_LIBRARY)
 endif()
 
 if(USE_STATIC_MBEDTLS_LIBRARY)
-    if(!ENABLE_PSA)
+    if(!USE_CRYPTO_SUBMODULE)
         add_library(${mbedcrypto_static_target} STATIC ${src_crypto})
         set_target_properties(${mbedcrypto_static_target} PROPERTIES OUTPUT_NAME mbedcrypto)
         target_link_libraries(${mbedcrypto_static_target} ${libs})
@@ -158,7 +158,7 @@ if(USE_STATIC_MBEDTLS_LIBRARY)
     target_link_libraries(${mbedtls_static_target} ${libs} ${mbedx509_static_target})
     target_include_directories(${mbedtls_static_target} PUBLIC ${CMAKE_SOURCE_DIR}/include/)
 
-    if(ENABLE_PSA)
+    if(USE_CRYPTO_SUBMODULE)
         install(TARGETS ${mbedtls_static_target} ${mbedx509_static_target}
                 DESTINATION ${LIB_INSTALL_DIR}
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -170,7 +170,7 @@ if(USE_STATIC_MBEDTLS_LIBRARY)
 endif(USE_STATIC_MBEDTLS_LIBRARY)
 
 if(USE_SHARED_MBEDTLS_LIBRARY)
-    if(!ENABLE_PSA)
+    if(!USE_CRYPTO_SUBMODULE)
         add_library(mbedcrypto SHARED ${src_crypto})
         set_target_properties(mbedcrypto PROPERTIES VERSION 2.13.1 SOVERSION 3)
         target_link_libraries(mbedcrypto ${libs})
@@ -187,7 +187,7 @@ if(USE_SHARED_MBEDTLS_LIBRARY)
     target_link_libraries(mbedtls ${libs} mbedx509)
     target_include_directories(mbedtls PUBLIC ${CMAKE_SOURCE_DIR}/include/)
 
-    if(ENABLE_PSA)
+    if(USE_CRYPTO_SUBMODULE)
         install(TARGETS mbedtls mbedx509
                 DESTINATION ${LIB_INSTALL_DIR}
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -198,7 +198,7 @@ if(USE_SHARED_MBEDTLS_LIBRARY)
     endif()
 endif(USE_SHARED_MBEDTLS_LIBRARY)
 
-if(ENABLE_PSA)
+if(USE_CRYPTO_SUBMODULE)
     add_custom_target(lib DEPENDS mbedx509 mbedtls)
     if(USE_STATIC_MBEDTLS_LIBRARY AND USE_SHARED_MBEDTLS_LIBRARY)
         add_dependencies(lib mbedx509_static mbedtls_static)

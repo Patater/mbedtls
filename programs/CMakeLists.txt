@@ -1,4 +1,4 @@
-if(!ENABLE_PSA)
+if(!USE_CRYPTO_SUBMODULE)
     add_subdirectory(aes)
     add_subdirectory(hash)
     add_subdirectory(random)

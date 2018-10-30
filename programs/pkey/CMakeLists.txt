@@ -4,7 +4,7 @@ target_link_libraries(dh_client mbedtls)
 add_executable(dh_server dh_server.c)
 target_link_libraries(dh_server mbedtls)
 
-if(!ENABLE_PSA)
+if(!USE_CRYPTO_SUBMODULE)
     add_executable(dh_genprime dh_genprime.c)
     target_link_libraries(dh_genprime mbedtls)
 
@@ -60,7 +60,7 @@ if(!ENABLE_PSA)
     target_link_libraries(pk_decrypt mbedtls)
 endif()
 
-if(ENABLE_PSA)
+if(USE_CRYPTO_SUBMODULE)
     install(TARGETS dh_client dh_server
             DESTINATION "bin"
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
