@@ -93,7 +93,7 @@ CRYPTO_APPS := \
 	random/gen_random_havege$(EXEXT) \
 	random/gen_random_ctr_drbg$(EXEXT) \
 
-SHARED_APPS :=
+SHARED_APPS := \
 	test/benchmark$(EXEXT) \
 	test/selftest$(EXEXT) \
 	test/zeroize$(EXEXT) \
