@@ -63,7 +63,7 @@ DLEXT = dylib
 endif
 endif
 
-ifndef ENABLE_PSA
+ifndef USE_CRYPTO_SUBMODULE
 OBJS_CRYPTO=	aes.o		aesni.o		arc4.o		\
 		aria.o		asn1parse.o	asn1write.o	\
 		base64.o	bignum.o	blowfish.o	\
@@ -108,13 +108,13 @@ else
 all: shared static
 endif
 
-ifdef ENABLE_PSA
+ifdef USE_CRYPTO_SUBMODULE
 static: libmbedx509.a libmbedtls.a
 else
 static: libmbedcrypto.a libmbedx509.a libmbedtls.a
 endif
 
-ifdef ENABLE_PSA
+ifdef USE_CRYPTO_SUBMODULE
 shared: libmbedx509.$(DLEXT) libmbedtls.$(DLEXT)
 else
 shared: libmbedcrypto.$(DLEXT) libmbedx509.$(DLEXT) libmbedtls.$(DLEXT)
@@ -175,7 +175,7 @@ libmbedx509.dll: $(OBJS_X509) libmbedcrypto.dll
 	$(CC) -shared -Wl,-soname,$@ -Wl,--out-implib,$@.a -o $@ $(OBJS_X509) -lws2_32 -lwinmm -lgdi32 -L. -lmbedcrypto -static-libgcc $(LOCAL_LDFLAGS) $(LDFLAGS)
 
 # crypto
-ifndef ENABLE_PSA
+ifndef USE_CRYPTO_SUBMODULE
 libmbedcrypto.a: $(OBJS_CRYPTO)
 	echo "  AR    $@"
 	$(AR) $(ARFLAGS) $@ $(OBJS_CRYPTO)

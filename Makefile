@@ -13,51 +13,28 @@ no_test: programs
 
 programs: lib
 	$(MAKE) -C programs
-ifdef ENABLE_PSA
-	$(MAKE) -C crypto/programs
-endif
 
-lib:
-ifdef ENABLE_PSA
-	$(MAKE) -C crypto/library
-endif
+lib: mbedcrypto
 	$(MAKE) -C library
 
 tests: lib
 	$(MAKE) -C tests
-ifdef ENABLE_PSA
-	$(MAKE) -C crypto/tests
-endif
 
 ifndef WINDOWS
 install: no_test
 	mkdir -p $(DESTDIR)/include/mbedtls
 	cp -rp include/mbedtls $(DESTDIR)/include
-ifdef ENABLE_PSA
-	mkdir -p $(DESTDIR)/include/psa
-	cp -rp crypto/include/psa $(DESTDIR)/include
-endif
 
 	mkdir -p $(DESTDIR)/lib
 	cp -RP library/libmbedtls.*    $(DESTDIR)/lib
 	cp -RP library/libmbedx509.*   $(DESTDIR)/lib
 ifdef ENABLE_PSA
-	cp -RP crypto/library/libmbedcrypto.* $(DESTDIR)/lib
+	$(MAKE) -C crypto install
 else
 	cp -RP library/libmbedcrypto.* $(DESTDIR)/lib
 endif
 
 	mkdir -p $(DESTDIR)/bin
-ifdef ENABLE_PSA
-	# XXX Remove duplication by making a function
-	for p in crypto/programs/*/* ; do       \
-	    if [ -x $$p ] && [ ! -d $$p ] ;     \
-	    then                                \
-	        f=$(PREFIX)`basename $$p` ;     \
-	        cp $$p $(DESTDIR)/bin/$$f ;     \
-	    fi                                  \
-	done
-endif
 	for p in programs/*/* ; do              \
 	    if [ -x $$p ] && [ ! -d $$p ] ;     \
 	    then                                \
@@ -72,7 +49,7 @@ uninstall:
 	rm -f $(DESTDIR)/lib/libmbedx509.*
 	rm -f $(DESTDIR)/lib/libmbedcrypto.*
 ifdef ENABLE_PSA
-	rm -rf $(DESTDIR)/include/psa
+	$(MAKE) -C crypto uninstall
 endif
 
 	for p in programs/*/* ; do              \
@@ -82,15 +59,6 @@ endif
 	        rm -f $(DESTDIR)/bin/$$f ;      \
 	    fi                                  \
 	done
-ifdef ENABLE_PSA
-	for p in crypto/programs/*/* ; do       \
-	    if [ -x $$p ] && [ ! -d $$p ] ;     \
-	    then                                \
-	        f=$(PREFIX)`basename $$p` ;     \
-	        rm -f $(DESTDIR)/bin/$$f ;      \
-	    fi                                  \
-	done
-endif
 endif
 
 WARNING_BORDER      =*******************************************************\n
@@ -121,9 +89,6 @@ endif
 
 check: lib tests
 	$(MAKE) -C tests check
-ifdef ENABLE_PSA
-	$(MAKE) -C crypto/tests check
-endif
 
 test: check
 

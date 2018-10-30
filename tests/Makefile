@@ -12,7 +12,7 @@ LOCAL_LDFLAGS = -L../library			\
 		-lmbedx509$(SHARED_SUFFIX)	\
 		-lmbedcrypto$(SHARED_SUFFIX)
 
-ifdef ENABLE_PSA
+ifdef USE_CRYPTO_SUBMODULE
 LOCAL_LDFLAGS += -L../crypto/library
 endif
 
@@ -62,7 +62,7 @@ endif
 # constructed by stripping path 'suites/' and extension .data.
 APPS = $(basename $(subst suites/,,$(wildcard suites/test_suite_*.data)))
 
-ifdef ENABLE_PSA
+ifdef USE_CRYPTO_SUBMODULE
 APPS := $(filter-out \
 		test_suite_aes.cbc \
 		test_suite_aes.cfb \
