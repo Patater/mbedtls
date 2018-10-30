@@ -4,7 +4,7 @@ PREFIX=mbedtls_
 
 .SILENT:
 
-.PHONY: all no_test programs lib tests install uninstall clean test check covtest lcov apidoc apidoc_clean
+.PHONY: all no_test programs lib mbedcrypto tests install uninstall clean test check covtest lcov apidoc apidoc_clean
 
 all: programs tests
 	$(MAKE) post_build
@@ -14,8 +14,18 @@ no_test: programs
 programs: lib
 	$(MAKE) -C programs
 
+ifdef USE_CRYPTO_SUBMODULE
 lib: mbedcrypto
 	$(MAKE) -C library
+else
+lib:
+	$(MAKE) -C library
+endif
+
+ifdef USE_CRYPTO_SUBMODULE
+mbedcrypto:
+	$(MAKE) -C crypto/library
+endif
 
 tests: lib
 	$(MAKE) -C tests
@@ -28,7 +38,7 @@ install: no_test
 	mkdir -p $(DESTDIR)/lib
 	cp -RP library/libmbedtls.*    $(DESTDIR)/lib
 	cp -RP library/libmbedx509.*   $(DESTDIR)/lib
-ifdef ENABLE_PSA
+ifdef USE_CRYPTO_SUBMODULE
 	$(MAKE) -C crypto install
 else
 	cp -RP library/libmbedcrypto.* $(DESTDIR)/lib
@@ -48,7 +58,7 @@ uninstall:
 	rm -f $(DESTDIR)/lib/libmbedtls.*
 	rm -f $(DESTDIR)/lib/libmbedx509.*
 	rm -f $(DESTDIR)/lib/libmbedcrypto.*
-ifdef ENABLE_PSA
+ifdef USE_CRYPTO_SUBMODULE
 	$(MAKE) -C crypto uninstall
 endif
 
@@ -80,7 +90,7 @@ clean:
 	$(MAKE) -C library clean
 	$(MAKE) -C programs clean
 	$(MAKE) -C tests clean
-ifdef ENABLE_PSA
+ifdef USE_CRYPTO_SUBMODULE
 	$(MAKE) -C crypto clean
 endif
 ifndef WINDOWS

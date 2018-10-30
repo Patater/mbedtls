@@ -14,7 +14,7 @@ LOCAL_LDFLAGS = -L../library 			\
 		-lmbedx509$(SHARED_SUFFIX)	\
 		-lmbedcrypto$(SHARED_SUFFIX)
 
-ifdef ENABLE_PSA
+ifdef USE_CRYPTO_SUBMODULE
 LOCAL_LDFLAGS += -L../crypto/library
 endif
 
