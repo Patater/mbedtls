@@ -105,7 +105,11 @@ SHARED_APPS :=
 	x509/cert_write$(EXEXT) \
 	x509/req_app$(EXEXT) \
 
+ifdef USE_CRYPTO_SUBMODULE
+APPS := $(TLS_APPS) $(SHARED_APPS)
+else
 APPS := $(TLS_APPS) $(SHARED_APPS) $(CRYPTO_APPS)
+endif
 
 ifdef PTHREAD
 APPS +=	ssl/ssl_pthread_server$(EXEXT)
