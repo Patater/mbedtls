@@ -13,7 +13,7 @@ endif(ENABLE_ZLIB_SUPPORT)
 add_executable(selftest selftest.c)
 target_link_libraries(selftest ${libs})
 
-if(!USE_CRYPTO_SUBMODULE)
+if(NOT USE_CRYPTO_SUBMODULE)
     add_executable(benchmark benchmark.c)
     target_link_libraries(benchmark ${libs})
 endif()

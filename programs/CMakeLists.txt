@@ -1,4 +1,4 @@
-if(!USE_CRYPTO_SUBMODULE)
+if(NOT USE_CRYPTO_SUBMODULE)
     add_subdirectory(aes)
     add_subdirectory(hash)
     add_subdirectory(random)

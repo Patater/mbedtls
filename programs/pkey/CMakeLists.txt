@@ -4,7 +4,7 @@ target_link_libraries(dh_client mbedtls)
 add_executable(dh_server dh_server.c)
 target_link_libraries(dh_server mbedtls)
 
-if(!USE_CRYPTO_SUBMODULE)
+if(NOT USE_CRYPTO_SUBMODULE)
     add_executable(dh_genprime dh_genprime.c)
     target_link_libraries(dh_genprime mbedtls)
 
