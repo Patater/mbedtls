@@ -2603,7 +2603,7 @@
 #define MBEDTLS_POLY1305_C
 
 /**
-* \def MBEDTLS_PSA_CRYPTO_C
+ * \def MBEDTLS_PSA_CRYPTO_C
  *
  * Enable the Platform Security Architecture cryptography API.
  *
