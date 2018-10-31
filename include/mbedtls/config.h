@@ -1163,11 +1163,11 @@
  * NSPE (Non-Secure Process Environment) and an SPE (Secure Process
  * Environment).
  *
- * \warning This feature is experimental and available on an opt-in basis only.
- * PSA APIs are subject to change. The implementation comes with less assurance
- * and support than the rest of Mbed TLS.
+ * \warning This feature is experimental and available for evaluation only. It
+ * is disabled by default. PSA APIs are subject to change. The implementation
+ * comes with less assurance and support than the rest of Mbed TLS.
  *
- * Module:  library/psa_crypto.c
+ * Module:  crypto/library/psa_crypto.c
  * Requires: MBEDTLS_PSA_CRYPTO_C
  *
  */
@@ -2611,7 +2611,7 @@
  * PSA APIs are subject to change. The implementation comes with less assurance
  * and support than the rest of Mbed TLS.
  *
- * Module:  library/psa_crypto.c
+ * Module:  crypto/library/psa_crypto.c
  *
  * Requires: MBEDTLS_CTR_DRBG_C, MBEDTLS_ENTROPY_C
  *
