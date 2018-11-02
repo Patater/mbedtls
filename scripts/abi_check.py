@@ -64,7 +64,7 @@ class AbiChecker(object):
         )
         git_worktree_path = tempfile.mkdtemp()
         worktree_process = subprocess.Popen(
-            [self.git_command, "worktree", "add", git_worktree_path, git_rev],
+            [self.git_command, "worktree", "add", "--detach", git_worktree_path, git_rev],
             cwd=self.repo_path,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT
@@ -79,6 +79,7 @@ class AbiChecker(object):
         my_environment = os.environ.copy()
         my_environment["CFLAGS"] = "-g -Og"
         my_environment["SHARED"] = "1"
+        my_environment["USE_CRYPTO_SUBMODULE"] = "1"
         make_process = subprocess.Popen(
             self.make_command,
             env=my_environment,
