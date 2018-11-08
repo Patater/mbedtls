@@ -176,7 +176,7 @@ libmbedx509.dll: $(OBJS_X509) libmbedcrypto.dll
 # crypto
 ifdef USE_CRYPTO_SUBMODULE
 libmbedcrypto.%:
-	$(MAKE) INCLUDES:="-I../../include -I../include" -C ../crypto/library $<
+	$(MAKE) INCLUDES:="-I../../include -I../include" -C ../crypto/library $@
 else
 libmbedcrypto.a: $(OBJS_CRYPTO)
 	echo "  AR    $@"
