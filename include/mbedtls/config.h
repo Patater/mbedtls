@@ -1163,6 +1163,9 @@
  * NSPE (Non-Secure Process Environment) and an SPE (Secure Process
  * Environment).
  *
+ * \note This option only has an effect when the build option
+ * USE_CRYPTO_SUBMODULE is also in use.
+ *
  * \warning This feature is experimental and available for evaluation only. It
  * is disabled by default. PSA APIs are subject to change. The implementation
  * comes with less assurance and support than the rest of Mbed TLS.
@@ -2608,6 +2611,9 @@
  * \def MBEDTLS_PSA_CRYPTO_C
  *
  * Enable the Platform Security Architecture cryptography API.
+ *
+ * \note This option only has an effect when the build option
+ * USE_CRYPTO_SUBMODULE is also in use.
  *
  * \warning This feature is experimental and available on an opt-in basis only.
  * PSA APIs are subject to change. The implementation comes with less assurance
