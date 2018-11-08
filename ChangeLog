@@ -17,6 +17,11 @@ Features
      operations. On CPUs where the extensions are available, they can accelerate
      MPI multiplications used in ECC and RSA cryptography. Contributed by
      Aurelien Jarno.
+   * Add an experimental build option, USE_CRYPTO_SUBMODULE, to enable use of
+     Mbed Crypto as the source of the cryptography implementation.
+   * Add an experimental configuration option, MBEDTLS_PSA_CRYPTO_C, to enable
+     the PSA Crypto API from Mbed Crypto when additionally used with the
+     USE_CRYPTO_SUBMODULE build option.
 
 Bugfix
    * Fix wrong order of freeing in programs/ssl/ssl_server2 example
