@@ -88,6 +88,11 @@ elif [ -d library -a -d include -a -d tests ]; then :; else
     exit 1
 fi
 
+if ! [ -f crypto/Makefile ]; then
+    echo "Please initialize the crypto submodule" >&2
+    exit 1
+fi
+
 CONFIG_H='include/mbedtls/config.h'
 CONFIG_BAK="$CONFIG_H.bak"
 
@@ -154,11 +159,9 @@ cleanup()
     fi
 
     command make clean
-    if [ -f crypto/Makefile ]; then
-        cd crypto
-        command make clean
-        cd ..
-    fi
+    cd crypto
+    command make clean
+    cd ..
 
     # Remove CMake artefacts
     find . -name .git -prune -o \
@@ -170,13 +173,11 @@ cleanup()
     rm -f include/Makefile include/mbedtls/Makefile programs/*/Makefile
     git update-index --no-skip-worktree Makefile library/Makefile programs/Makefile tests/Makefile
     git checkout -- Makefile library/Makefile programs/Makefile tests/Makefile
-    if [ -f crypto/Makefile ]; then
-        cd crypto
-        rm -f include/Makefile include/mbedtls/Makefile programs/*/Makefile
-        git update-index --no-skip-worktree Makefile library/Makefile programs/Makefile tests/Makefile
-        git checkout -- Makefile library/Makefile programs/Makefile tests/Makefile
-        cd ..
-    fi
+    cd crypto
+    rm -f include/Makefile include/mbedtls/Makefile programs/*/Makefile
+    git update-index --no-skip-worktree Makefile library/Makefile programs/Makefile tests/Makefile
+    git checkout -- Makefile library/Makefile programs/Makefile tests/Makefile
+    cd ..
 
     if [ -f "$CONFIG_BAK" ]; then
         mv "$CONFIG_BAK" "$CONFIG_H"
