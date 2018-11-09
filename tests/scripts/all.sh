@@ -154,9 +154,11 @@ cleanup()
     fi
 
     command make clean
-    cd crypto
-    command make clean
-    cd ..
+    if [ -f crypto/Makefile ]; then
+        cd crypto
+        command make clean
+        cd ..
+    fi
 
     # Remove CMake artefacts
     find . -name .git -prune -o \
@@ -168,11 +170,13 @@ cleanup()
     rm -f include/Makefile include/mbedtls/Makefile programs/*/Makefile
     git update-index --no-skip-worktree Makefile library/Makefile programs/Makefile tests/Makefile
     git checkout -- Makefile library/Makefile programs/Makefile tests/Makefile
-    cd crypto
-    rm -f include/Makefile include/mbedtls/Makefile programs/*/Makefile
-    git update-index --no-skip-worktree Makefile library/Makefile programs/Makefile tests/Makefile
-    git checkout -- Makefile library/Makefile programs/Makefile tests/Makefile
-    cd ..
+    if [ -f crypto/Makefile ]; then
+        cd crypto
+        rm -f include/Makefile include/mbedtls/Makefile programs/*/Makefile
+        git update-index --no-skip-worktree Makefile library/Makefile programs/Makefile tests/Makefile
+        git checkout -- Makefile library/Makefile programs/Makefile tests/Makefile
+        cd ..
+    fi
 
     if [ -f "$CONFIG_BAK" ]; then
         mv "$CONFIG_BAK" "$CONFIG_H"
