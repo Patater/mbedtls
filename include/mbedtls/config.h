@@ -1167,8 +1167,9 @@
  * USE_CRYPTO_SUBMODULE is also in use.
  *
  * \warning This feature is experimental and available for evaluation only. It
- * is disabled by default. PSA APIs are subject to change. The implementation
- * comes with less assurance and support than the rest of Mbed TLS.
+ * is disabled by default. PSA APIs are subject to change at any time. The
+ * implementation comes with less assurance and support than the rest of Mbed
+ * TLS.
  *
  * Module:  crypto/library/psa_crypto.c
  * Requires: MBEDTLS_PSA_CRYPTO_C
@@ -2616,8 +2617,8 @@
  * USE_CRYPTO_SUBMODULE is also in use.
  *
  * \warning This feature is experimental and available on an opt-in basis only.
- * PSA APIs are subject to change. The implementation comes with less assurance
- * and support than the rest of Mbed TLS.
+ * PSA APIs are subject to change at any time. The implementation comes with
+ * less assurance and support than the rest of Mbed TLS.
  *
  * Module:  crypto/library/psa_crypto.c
  *
