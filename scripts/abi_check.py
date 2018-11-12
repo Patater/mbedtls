@@ -91,7 +91,6 @@ class AbiChecker(object):
         my_environment = os.environ.copy()
         my_environment["CFLAGS"] = "-g -Og"
         my_environment["SHARED"] = "1"
-        my_environment["USE_CRYPTO_SUBMODULE"] = "1"
         make_process = subprocess.Popen(
             self.make_command,
             env=my_environment,
