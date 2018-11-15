@@ -29,7 +29,9 @@ install: no_test
 	cp -RP library/libmbedtls.*    $(DESTDIR)/lib
 	cp -RP library/libmbedx509.*   $(DESTDIR)/lib
 ifdef USE_CRYPTO_SUBMODULE
-	$(MAKE) -C crypto install
+	mkdir -p $(DESTDIR)/include/psa
+	cp -rp crypto/include/psa $(DESTDIR)/include
+	cp -RP crypto/library/libmbedcrypto.* $(DESTDIR)/lib
 else
 	cp -RP library/libmbedcrypto.* $(DESTDIR)/lib
 endif
