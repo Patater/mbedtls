@@ -138,7 +138,8 @@ class TodoIssueTracker(IssueTracker):
         super().__init__()
         self.heading = "TODO present:"
         self.files_exemptions = [
-            __file__, "benchmark.c", "pull_request_template.md"
+            __file__, "benchmark.c", "pull_request_template.md",
+            "check-files.py"
         ]
 
     def issue_with_line(self, line):
