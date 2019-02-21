@@ -1170,6 +1170,22 @@ int query_config( const char *config )
     }
 #endif /* MBEDTLS_PKCS1_V21 */
 
+#if defined(MBEDTLS_PSA_CRYPTO_SPM)
+    if( strcmp( "MBEDTLS_PSA_CRYPTO_SPM", config ) == 0 )
+    {
+        MACRO_EXPANSION_TO_STR( MBEDTLS_PSA_CRYPTO_SPM );
+        return( 0 );
+    }
+#endif /* MBEDTLS_PSA_CRYPTO_SPM */
+
+#if defined(MBEDTLS_PSA_HAS_ITS_IO)
+    if( strcmp( "MBEDTLS_PSA_HAS_ITS_IO", config ) == 0 )
+    {
+        MACRO_EXPANSION_TO_STR( MBEDTLS_PSA_HAS_ITS_IO );
+        return( 0 );
+    }
+#endif /* MBEDTLS_PSA_HAS_ITS_IO */
+
 #if defined(MBEDTLS_RSA_NO_CRT)
     if( strcmp( "MBEDTLS_RSA_NO_CRT", config ) == 0 )
     {
@@ -1425,6 +1441,14 @@ int query_config( const char *config )
         return( 0 );
     }
 #endif /* MBEDTLS_THREADING_PTHREAD */
+
+#if defined(MBEDTLS_USE_PSA_CRYPTO)
+    if( strcmp( "MBEDTLS_USE_PSA_CRYPTO", config ) == 0 )
+    {
+        MACRO_EXPANSION_TO_STR( MBEDTLS_USE_PSA_CRYPTO );
+        return( 0 );
+    }
+#endif /* MBEDTLS_USE_PSA_CRYPTO */
 
 #if defined(MBEDTLS_VERSION_FEATURES)
     if( strcmp( "MBEDTLS_VERSION_FEATURES", config ) == 0 )
@@ -1873,6 +1897,38 @@ int query_config( const char *config )
         return( 0 );
     }
 #endif /* MBEDTLS_POLY1305_C */
+
+#if defined(MBEDTLS_PSA_CRYPTO_C)
+    if( strcmp( "MBEDTLS_PSA_CRYPTO_C", config ) == 0 )
+    {
+        MACRO_EXPANSION_TO_STR( MBEDTLS_PSA_CRYPTO_C );
+        return( 0 );
+    }
+#endif /* MBEDTLS_PSA_CRYPTO_C */
+
+#if defined(MBEDTLS_PSA_CRYPTO_STORAGE_C)
+    if( strcmp( "MBEDTLS_PSA_CRYPTO_STORAGE_C", config ) == 0 )
+    {
+        MACRO_EXPANSION_TO_STR( MBEDTLS_PSA_CRYPTO_STORAGE_C );
+        return( 0 );
+    }
+#endif /* MBEDTLS_PSA_CRYPTO_STORAGE_C */
+
+#if defined(MBEDTLS_PSA_CRYPTO_STORAGE_FILE_C)
+    if( strcmp( "MBEDTLS_PSA_CRYPTO_STORAGE_FILE_C", config ) == 0 )
+    {
+        MACRO_EXPANSION_TO_STR( MBEDTLS_PSA_CRYPTO_STORAGE_FILE_C );
+        return( 0 );
+    }
+#endif /* MBEDTLS_PSA_CRYPTO_STORAGE_FILE_C */
+
+#if defined(MBEDTLS_PSA_CRYPTO_STORAGE_ITS_C)
+    if( strcmp( "MBEDTLS_PSA_CRYPTO_STORAGE_ITS_C", config ) == 0 )
+    {
+        MACRO_EXPANSION_TO_STR( MBEDTLS_PSA_CRYPTO_STORAGE_ITS_C );
+        return( 0 );
+    }
+#endif /* MBEDTLS_PSA_CRYPTO_STORAGE_ITS_C */
 
 #if defined(MBEDTLS_RIPEMD160_C)
     if( strcmp( "MBEDTLS_RIPEMD160_C", config ) == 0 )
