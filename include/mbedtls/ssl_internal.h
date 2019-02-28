@@ -31,30 +31,30 @@
 #endif
 
 #include "ssl.h"
-#include "cipher.h"
+#include "mbedtls/cipher.h"
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
 #include "psa/crypto.h"
 #endif
 
 #if defined(MBEDTLS_MD5_C)
-#include "md5.h"
+#include "mbedtls/md5.h"
 #endif
 
 #if defined(MBEDTLS_SHA1_C)
-#include "sha1.h"
+#include "mbedtls/sha1.h"
 #endif
 
 #if defined(MBEDTLS_SHA256_C)
-#include "sha256.h"
+#include "mbedtls/sha256.h"
 #endif
 
 #if defined(MBEDTLS_SHA512_C)
-#include "sha512.h"
+#include "mbedtls/sha512.h"
 #endif
 
 #if defined(MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED)
-#include "ecjpake.h"
+#include "mbedtls/ecjpake.h"
 #endif
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO)

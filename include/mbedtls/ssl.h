@@ -30,8 +30,8 @@
 #include MBEDTLS_CONFIG_FILE
 #endif
 
-#include "bignum.h"
-#include "ecp.h"
+#include "mbedtls/bignum.h"
+#include "mbedtls/ecp.h"
 
 #include "ssl_ciphersuites.h"
 
@@ -41,11 +41,11 @@
 #endif
 
 #if defined(MBEDTLS_DHM_C)
-#include "dhm.h"
+#include "mbedtls/dhm.h"
 #endif
 
 #if defined(MBEDTLS_ECDH_C)
-#include "ecdh.h"
+#include "mbedtls/ecdh.h"
 #endif
 
 #if defined(MBEDTLS_ZLIB_SUPPORT)

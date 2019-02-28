@@ -37,7 +37,7 @@
  */
 
 #include "ssl.h"
-#include "cipher.h"
+#include "mbedtls/cipher.h"
 
 #if defined(MBEDTLS_THREADING_C)
 #include "threading.h"
