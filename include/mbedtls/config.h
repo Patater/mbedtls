@@ -1793,7 +1793,7 @@
  *
  * Uncomment to enable trusted certificate callbacks.
  */
-//#define MBEDTLS_X509_TRUSTED_CERTIFICATE_CALLBACK
+#define MBEDTLS_X509_TRUSTED_CERTIFICATE_CALLBACK
 
 /**
  * \def MBEDTLS_X509_CHECK_KEY_USAGE
