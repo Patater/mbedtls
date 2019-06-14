@@ -1,3 +1,12 @@
+![bug count](https://img.shields.io/github/issues/ARMmbed/mbedtls/bug.svg?color=green)
+![enhancement count](https://img.shields.io/github/issues/ARMmbed/mbedtls/enhancement.svg?color=9cf)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ARMmbed/mbedtls.svg)
+![GitHub contributors](https://img.shields.io/github/contributors-anon/ARMmbed/mbedtls.svg)
+![GitHub All Releases](https://img.shields.io/github/downloads/ARMmbed/mbedtls/total.svg)
+[![Coverity Scan](https://scan.coverity.com/projects/4583/badge.svg?flat=1)](https://scan.coverity.com/projects/armmbed-mbedtls)
+[![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/ARMmbed/mbedtls.svg)](https://lgtm.com/projects/g/ARMmbed/mbedtls/)
+[![Build Status](https://travis-ci.org/ARMmbed/mbedtls.svg?branch=development)](https://travis-ci.org/ARMmbed/mbedtls)
+
 README for Mbed TLS
 ===================
 
