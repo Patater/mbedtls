@@ -3363,9 +3363,9 @@ int main( int argc, char *argv[] )
         }
         else
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
-        if( ( ret = mbedtls_ssl_conf_psk( &conf, psk, psk_len,
+        if( ( psk_len != 0 ) && ( ( ret = mbedtls_ssl_conf_psk( &conf, psk, psk_len,
                                      (const unsigned char *) opt.psk_identity,
-                                     strlen( opt.psk_identity ) ) ) != 0 )
+                                     strlen( opt.psk_identity ) ) ) != 0 ) )
         {
             mbedtls_printf( "  failed\n  mbedtls_ssl_conf_psk returned -0x%04X\n\n", - ret );
             goto exit;

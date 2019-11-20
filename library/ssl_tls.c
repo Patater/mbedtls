@@ -9177,8 +9177,9 @@ int mbedtls_ssl_conf_psk( mbedtls_ssl_config *conf,
     ssl_conf_remove_psk( conf );
 
     /* Check and set raw PSK */
-    if( psk == NULL || psk_len > MBEDTLS_PSK_MAX_LEN )
+    if( psk == NULL || psk_len == 0 || psk_len > MBEDTLS_PSK_MAX_LEN)
         return( MBEDTLS_ERR_SSL_BAD_INPUT_DATA );
+
     if( ( conf->psk = mbedtls_calloc( 1, psk_len ) ) == NULL )
         return( MBEDTLS_ERR_SSL_ALLOC_FAILED );
     conf->psk_len = psk_len;
