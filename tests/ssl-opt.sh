@@ -1503,6 +1503,15 @@ run_test    "Context serialization, both serialize, CCM" \
             0 \
             -c "Deserializing connection..." \
             -s "Deserializing connection..."
+## XXX
+##requires_config_enabled MBEDTLS_SSL_CONTEXT_SERIALIZATION
+##run_test    "Context serialization, both serialize, with CID, client required" \
+##            "$P_SRV auth_mode=required dtls=1 serialize=1 exchanges=2" \
+##            "$P_CLI dtls=1 serialize=1 exchanges=2 crt_file=data_files/server5.crt \
+##             key_file=data_files/server5.key" \
+##            0 \
+##            -c "Deserializing connection..." \
+##            -s "Deserializing connection..."
 
 requires_config_enabled MBEDTLS_SSL_CONTEXT_SERIALIZATION
 run_test    "Context serialization, both serialize, ChaChaPoly" \
@@ -1624,6 +1633,15 @@ requires_config_enabled MBEDTLS_SSL_DTLS_CONNECTION_ID
 run_test    "Context serialization, re-init, both serialize, with CID" \
             "$P_SRV dtls=1 serialize=2 exchanges=2 cid=1 cid_val=dead" \
             "$P_CLI dtls=1 serialize=2 exchanges=2 cid=1 cid_val=beef" \
+            0 \
+            -c "Deserializing connection..." \
+            -s "Deserializing connection..."
+
+requires_config_enabled MBEDTLS_SSL_CONTEXT_SERIALIZATION
+requires_config_enabled MBEDTLS_SSL_DTLS_CONNECTION_ID
+run_test    "clientauth+serial+reinit+cid" \
+            "$P_SRV dtls=1 serialize=1 exchanges=2 cid=1 cid_val=44674e7256434f49677667 auth_mode=required" \
+            "$P_CLI dtls=1 serialize=1 exchanges=2 cid=1 cid_val=4f32356566786e69364738 crt_file=data_files/server5.crt key_file=data_files/server5.key" \
             0 \
             -c "Deserializing connection..." \
             -s "Deserializing connection..."

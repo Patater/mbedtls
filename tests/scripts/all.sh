@@ -1211,6 +1211,33 @@ component_test_ssl_alloc_buffer_and_mfl () {
     if_build_succeeded tests/ssl-opt.sh -f "Handshake memory usage"
 }
 
+component_test_variable_ssl_in_out_buffer_len_and_pelion_cfg () {
+    msg "build: default config with pelion customizations (ASan build)"
+    scripts/config.py set MBEDTLS_ARIA_C
+    scripts/config.py set MBEDTLS_SSL_ASYNC_PRIVATE
+    scripts/config.py unset MBEDTLS_SHA512_C
+    scripts/config.py set MBEDTLS_SSL_DTLS_CONNECTION_ID
+    scripts/config.py set MBEDTLS_SSL_CONTEXT_SERIALIZATION
+    #scripts/config.py set MBEDTLS_SSL_MAX_CONTENT_LEN 4096
+    #scripts/config.py set MBEDTLS_SSL_DTLS_MAX_BUFFERING 4608
+    scripts/config.py set MBEDTLS_SSL_RECORD_CHECKING
+    scripts/config.py unset MBEDTLS_SSL_PROTO_TLS1
+    scripts/config.py unset MBEDTLS_SSL_PROTO_TLS1_1
+    scripts/config.py unset MBEDTLS_SSL_CBC_RECORD_SPLITTING
+    scripts/config.py set MBEDTLS_THREADING_C
+    scripts/config.py set MBEDTLS_THREADING_PTHREAD
+    scripts/config.py set MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
+    scripts/config.py set MBEDTLS_SSL_VARIABLE_BUFFER_LENGTH
+    CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
+    make
+
+    msg "test: default config with pelion customizations (ASan build)"
+    if_build_succeeded make test
+
+    msg "test ssl-opt.sh: Context serialization, server serializes, with CID"
+    if_build_succeeded tests/ssl-opt.sh -f 'clientauth'
+}
+
 component_test_when_no_ciphersuites_have_mac () {
     msg "build: when no ciphersuites have MAC"
     scripts/config.py unset MBEDTLS_CIPHER_NULL_CIPHER
